@@ -1,0 +1,15 @@
+---
+import PageA from '../a/PageA.astro';
+import PageB from '../b/PageB.astro';
+import PageC from '../c/PageC.astro';
+import { DEFAULT_CONCEPT, type ConceptId, type Lang } from '../../data/site';
+
+interface Props { id: ConceptId; lang: Lang; path: string; asHome?: boolean }
+const { id, lang, path, asHome = false } = Astro.props;
+// Concept routes are review URLs: never indexed. When a concept is promoted to
+// the homepage, its /concept-x/ twin canonicalises to the homepage.
+const indexable = asHome;
+const canonicalPath = !asHome && DEFAULT_CONCEPT === id ? (lang === 'en' ? 'en/' : '') : undefined;
+const P = { a: PageA, b: PageB, c: PageC }[id];
+---
+<P lang={lang} path={path} indexable={indexable} canonicalPath={canonicalPath} />

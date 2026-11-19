@@ -1,0 +1,517 @@
+---
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/space-grotesk';
+import Base from '../../layouts/Base.astro';
+import Icon from '../shared/Icon.astro';
+import Fish from '../shared/Fish.astro';
+import Photo from '../shared/Photo.astro';
+import { type Lang, LOCATIONS, SOCIAL, MENU_PDF, PHONE_DISPLAY, PHONE_E164, whatsappLink, mapsDirections, mapsEmbed } from '../../data/site';
+import { MENU, priceOf, signatureItems } from '../../data/menu';
+import { GALLERY, PHOTOS } from '../../data/gallery';
+import { REVIEWS } from '../../data/reviews';
+import { t, url } from '../../i18n';
+
+interface Props { lang: Lang; path: string; indexable?: boolean; canonicalPath?: string }
+const { lang, path, indexable, canonicalPath } = Astro.props;
+const s = t(lang);
+const other: Lang = lang === 'es' ? 'en' : 'es';
+const switchHref = url(other === 'en' ? `en/${path}` : path);
+const wa = whatsappLink(lang);
+const dishes = signatureItems(lang);
+const nav = [
+  ['#story', s.nav.story], ['#menu', s.nav.menu], ['#locations', s.nav.locations],
+  ['#reviews', s.nav.reviews], ['#gallery', s.nav.gallery],
+] as const;
+const name = (o: { es: string; en: string }) => o[lang];
+const ticker = lang === 'es'
+  ? ['Ceviche al momento', 'Leche de tigre', 'Pesca del día', 'Pisco sour', 'Jalea mixta', 'Miraflores', 'Barranco', 'Causa acevichada']
+  : ['Ceviche made to order', "Tiger's milk", 'Catch of the day', 'Pisco sour', 'Mixed jalea', 'Miraflores', 'Barranco', 'Acevichada causa'];
+const cardTones = ['coral', 'citrus', 'sky', 'lime', 'marine'];
+---
+<Base lang={lang} path={path} bodyClass="cB" indexable={indexable} canonicalPath={canonicalPath} themeColor="#0a2c5a">
+  <a class="skip" href="#main">{s.skip}</a>
+
+  <header class="hd" data-header>
+    <div class="hd__bar">
+      <a class="brand" href="#top" aria-label="Ceviche House">
+        <Fish class="brand__fish" size={36} /><span>CEVICHE<br />HOUSE</span>
+      </a>
+      <nav class="hd__nav" aria-label="Principal">
+        {nav.map(([h, l]) => <a href={h}>{l}</a>)}
+      </nav>
+      <a class="lang" href={switchHref} hreflang={other} aria-label={s.switchLabel}><Icon name="globe" size={16} />{other.toUpperCase()}</a>
+      <a class="btn btn--citrus hd__cta" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} />{s.reserve}</a>
+      <button class="menuBtn" type="button" data-nav-toggle aria-controls="b-sheet" aria-expanded="false" aria-label={s.openMenu} data-label-open={s.openMenu} data-label-close={s.closeMenu}>
+        <Icon name="menu" size={22} />
+      </button>
+    </div>
+  </header>
+
+  <div class="sheet" id="b-sheet">
+    <div class="sheet__scrim" data-nav-close></div>
+    <div class="sheet__panel" role="dialog" aria-modal="true" aria-label={s.openMenu}>
+      <span class="sheet__grab" aria-hidden="true"></span>
+      <nav class="sheet__nav" aria-label="Móvil">
+        <a href="#top">{s.nav.home}</a>
+        {nav.map(([h, l]) => <a href={h}>{l}</a>)}
+      </nav>
+      <div class="sheet__row">
+        <a class="btn btn--coral btn--block" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" size={20} />{s.reserveWa}</a>
+        <a class="btn btn--ghost" href={switchHref} hreflang={other}><Icon name="globe" size={18} />{s.switchTo}</a>
+        <button class="btn btn--ghost" type="button" data-nav-close><Icon name="close" size={18} />{s.closeMenu}</button>
+      </div>
+    </div>
+  </div>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="hero__in">
+        <div class="hero__copy">
+          <p class="tag">{s.eyebrow}</p>
+          <h1 class="hero__title">
+            {lang === 'es'
+              ? <Fragment><span>Ceviche</span> <span class="hl">al momento,</span> <span>sabor de Lima.</span></Fragment>
+              : <Fragment><span>Ceviche</span> <span class="hl">made to order,</span> <span>tasting of Lima.</span></Fragment>}
+          </h1>
+          <p class="hero__lead">{s.heroLead}</p>
+          <div class="hero__cta">
+            <a class="btn btn--citrus btn--lg" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" size={22} />{s.reserveLong}</a>
+            <a class="btn btn--outline btn--lg" href="#menu">{s.exploreMenu}<Icon name="arrow" size={20} /></a>
+          </div>
+        </div>
+        <div class="hero__art">
+          <div class="hero__card">
+            <Photo src={PHOTOS.ceviche} alt={GALLERY[0][lang]} eager sizes="(min-width: 1024px) 40vw, 90vw" widths={[480, 760, 1080]} />
+          </div>
+          <span class="sticker sticker--1">{lang === 'es' ? '¡Pesca del día!' : 'Catch of the day!'}</span>
+          <span class="sticker sticker--2">Miraflores<br />+ Barranco</span>
+          <div class="hero__card hero__card--2">
+            <Photo src={PHOTOS.mariscos} alt={GALLERY[2][lang]} sizes="(min-width: 1024px) 18vw, 40vw" widths={[360, 540]} />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker__track">
+        {[0, 1].map(() => (
+          <span>{ticker.map((w) => <Fragment>{w}<Fish class="ticker__fish" size={34} /></Fragment>)}</span>
+        ))}
+      </div>
+    </div>
+
+    <!-- STORY: bento -->
+    <section class="story" id="story">
+      <div class="wrap">
+        <h2 class="h2" data-reveal><span class="h2__k">{s.storyKicker}</span>{s.storyTitle}</h2>
+        <div class="bento">
+          <div class="bento__t bento__t--text" data-reveal>
+            <p>{s.storyP1}</p>
+            <p>{s.storyP2}</p>
+          </div>
+          {s.pillars.map((p, i) => (
+            <div class={`bento__t bento__t--p${i}`} data-reveal>
+              <span class="bento__n">0{i + 1}</span>
+              <h3>{p.t}</h3>
+              <p>{p.d}</p>
+            </div>
+          ))}
+          <div class="bento__t bento__t--quote" data-reveal>
+            <p>“{s.quote}”</p>
+            <p class="bento__sub">{s.storyP3}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIGNATURE DISHES: rail -->
+    <section class="dishes" id="dishes">
+      <div class="wrap dishes__head">
+        <h2 class="h2" data-reveal><span class="h2__k">{s.dishesKicker}</span>{s.dishesTitle}</h2>
+        <p data-reveal>{s.dishesLead}</p>
+      </div>
+      <ol class="rail" tabindex="0" aria-label={s.dishesTitle}>
+        {dishes.map((d, i) => (
+          <li class={`dcard dcard--${cardTones[i % cardTones.length]}`}>
+            <span class="dcard__cat">{d.category}</span>
+            <h3 class="dcard__name">{d.name}</h3>
+            <p class="dcard__desc">{d.desc}</p>
+            <span class="dcard__price">{d.price}</span>
+            <Fish class="dcard__fish" size={110} />
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- FULL MENU -->
+    <section class="menu" id="menu" data-menu>
+      <div class="wrap">
+        <div class="menu__head">
+          <h2 class="h2" data-reveal><span class="h2__k">{s.fullMenuKicker}</span>{s.fullMenuTitle}</h2>
+          <div class="menu__pdf">
+            <a class="btn btn--marine" href={MENU_PDF[lang]} target="_blank" rel="noopener"><Icon name="doc" size={18} />{s.menuPdf}</a>
+            <a class="btn btn--outlineDark" href={MENU_PDF[other]} target="_blank" rel="noopener" hreflang={other}><Icon name="doc" size={18} />{s.menuPdfOther}</a>
+          </div>
+        </div>
+        <div class="chips" role="group" aria-label={s.fullMenuTitle}>
+          <button type="button" data-filter="all" aria-pressed="true">{s.allCats}</button>
+          {MENU.map((c) => <button type="button" data-filter={c.id} aria-pressed="false">{name(c)}</button>)}
+        </div>
+        <div class="menu__grid">
+          {MENU.map((c) => (
+            <section class="mcat" data-cat={c.id} aria-labelledby={`b-cat-${c.id}`}>
+              <h3 id={`b-cat-${c.id}`}>{name(c)}<span>{c.items.length}</span></h3>
+              <ul>
+                {c.items.map((it) => (
+                  <li>
+                    <span>{name(it)}{(lang === 'es' ? it.subEs : it.subEn) && <small>{lang === 'es' ? it.subEs : it.subEn}</small>}</span>
+                    <b>S/ {priceOf(it, lang)}</b>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- LOCATIONS -->
+    <section class="loc" id="locations">
+      <div class="wrap">
+        <h2 class="h2 h2--light" data-reveal><span class="h2__k">{s.locationsKicker}</span>{s.locationsTitle}</h2>
+        <p class="loc__lead" data-reveal>{s.locationsLead}</p>
+        <div class="loc__grid">
+          {LOCATIONS.map((l, i) => (
+            <article class={`lcard lcard--${i === 0 ? 'coral' : 'citrus'}`} data-reveal>
+              <h3 class="lcard__name">{l.name}</h3>
+              <p class="lcard__note">{l.note[lang]}</p>
+              <address><Icon name="pin" size={18} />{l.street}, {l.district}, Lima</address>
+              <p class="lcard__hours">{l.hours ? l.hours[lang] : s.hoursTbd}</p>
+              <div class="lcard__btns">
+                <a class="btn btn--marine" href={whatsappLink(lang, l.id)} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} />{s.reserveHere} {l.name}</a>
+                <a class="btn btn--outlineDark" href={mapsDirections(l.mapsQuery)} target="_blank" rel="noopener"><Icon name="pin" size={18} />{s.directions}</a>
+                <a class="btn btn--outlineDark" href={`tel:${PHONE_E164}`}><Icon name="phone" size={18} />{s.call}</a>
+              </div>
+              <div class="lcard__map">
+                <button type="button" data-map-load={mapsEmbed(l.mapsQuery, lang)} data-title={`Mapa — Ceviche House ${l.name}`}>
+                  <Icon name="pin" size={28} /><b>{s.loadMap}</b><small>{s.mapPrivacy}</small>
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="rev" id="reviews">
+      <div class="wrap">
+        <h2 class="h2" data-reveal><span class="h2__k">{s.reviewsKicker}</span>{s.reviewsTitle}</h2>
+        <p class="rev__lead" data-reveal>{s.reviewsLead}</p>
+        <div class="rev__grid">
+          {REVIEWS.map((r) => (
+            <article class={`rcard rcard--${r.platform}`} data-reveal>
+              <div class="rcard__top">
+                <span class="rcard__plat">{s.platform[r.platform]}</span>
+                <span class="rcard__loc">{LOCATIONS.find((l) => l.id === r.location)!.name}</span>
+              </div>
+              {r.rating != null ? (
+                <p class="rcard__score">{r.rating.toFixed(1)}<small>/5{r.count != null && ` · ${r.count} ${s.reviewsCount}`}</small></p>
+              ) : (
+                <p class="rcard__empty">{s.noRatingYet}</p>
+              )}
+              {r.platform === 'tripadvisor' && <p class="rcard__note">{s.tripNote}</p>}
+              {r.quotes.map((q) => <blockquote><p>“{q.text}”</p><footer>{q.author} · {q.date}</footer></blockquote>)}
+              <a class="btn btn--marine btn--sm" href={r.url} target="_blank" rel="noopener">{s.readReviews}<Icon name="external" size={16} /></a>
+              {r.writeUrl && <a class="rcard__write" href={r.writeUrl} target="_blank" rel="noopener">{s.writeReview}</a>}
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="gal" id="gallery">
+      <div class="wrap">
+        <div class="gal__head">
+          <h2 class="h2" data-reveal><span class="h2__k">{s.galleryKicker}</span>{s.galleryTitle}</h2>
+          <div class="gal__social">
+            <a class="soc" href={SOCIAL.tiktok} target="_blank" rel="noopener" aria-label="TikTok"><Icon name="tiktok" size={22} /></a>
+            <a class="soc" href={SOCIAL.facebook} target="_blank" rel="noopener" aria-label="Facebook"><Icon name="facebook" size={22} /></a>
+            {SOCIAL.instagram && <a class="soc" href={SOCIAL.instagram} target="_blank" rel="noopener" aria-label="Instagram"><Icon name="instagram" size={22} /></a>}
+          </div>
+        </div>
+        <div class="gal__grid">
+          {GALLERY.map((g, i) => (
+            <figure class={`gtile gtile--${i}`} data-reveal>
+              {g.src ? (
+                <a href={PHOTOS[g.key as 'ceviche' | 'mariscos'].src} data-lightbox data-alt={g[lang]} aria-label={g[lang]}>
+                  <Photo src={g.src} alt={g[lang]} sizes="(min-width: 1024px) 33vw, 50vw" />
+                </a>
+              ) : (
+                <Photo src={null} alt={g[lang]} label={s.photoSoon} tone={i % 2 ? 'accent' : 'dark'} />
+              )}
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ft">
+    <div class="wrap">
+      <a class="ft__big" href={wa} target="_blank" rel="noopener">
+        <span>{lang === 'es' ? '¡Reserva ya!' : 'Book now!'}</span>
+        <Icon name="whatsapp" size={64} />
+      </a>
+      <p class="ft__lead">{s.footerReserveLead} <a href={`tel:${PHONE_E164}`}>{PHONE_DISPLAY}</a></p>
+      <div class="ft__grid">
+        {LOCATIONS.map((l) => <div><h3>{l.name}</h3><address>{l.street}<br />{l.district}, Lima</address></div>)}
+        <div>
+          <h3>{s.menus}</h3>
+          <a href={MENU_PDF.es} target="_blank" rel="noopener">Carta (ES)</a>
+          <a href={MENU_PDF.en} target="_blank" rel="noopener">Menu (EN)</a>
+        </div>
+        <div>
+          <h3>{s.follow}</h3>
+          <a href={SOCIAL.tiktok} target="_blank" rel="noopener">TikTok</a>
+          <a href={SOCIAL.facebook} target="_blank" rel="noopener">Facebook</a>
+          {SOCIAL.instagram && <a href={SOCIAL.instagram} target="_blank" rel="noopener">Instagram</a>}
+          <a href={switchHref} hreflang={other}>{s.switchTo}</a>
+        </div>
+      </div>
+      <p class="ft__legal">© {new Date().getFullYear()} Ceviche House · {s.footerTag} {s.rights}</p>
+    </div>
+  </footer>
+
+  <a class="mbar" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" size={22} />{s.reserveWa}</a>
+</Base>
+
+<style is:global>
+  .cB {
+    --marine: #0a2c5a; --marine-2: #0f3b78; --coral: #ff6f61; --citrus: #f5d300; --lime: #c4e538; --sky: #0e6aa6;
+    --cream: #fff6ea; --ink: #0b1a2e;
+    --disp: 'Bricolage Grotesque Variable', 'Arial Black', sans-serif; --body: 'Space Grotesk Variable', system-ui, sans-serif;
+    --gut: clamp(1rem, 4vw, 3rem); --max: 1360px; --r: 28px;
+    background: var(--cream); color: var(--ink); font: 400 1.05rem/1.6 var(--body); overflow-x: clip;
+  }
+  .cB main { overflow-x: clip; }
+  .cB .wrap { max-width: var(--max); margin: auto; padding-inline: var(--gut); }
+  .cB .h2 { font: 800 clamp(2.4rem, 7vw, 5.6rem)/.92 var(--disp); letter-spacing: -.035em; text-transform: uppercase; color: var(--marine); text-wrap: balance; }
+  .cB .h2--light { color: var(--cream); }
+  .cB .h2__k { display: block; width: max-content; font: 700 .8rem/1 var(--body); letter-spacing: .12em; padding: .5rem .85rem; border-radius: 999px; background: var(--coral); color: var(--marine); margin-bottom: 1rem; transform: rotate(-2deg); }
+
+  .cB .btn { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 50px; padding: .8rem 1.4rem; border-radius: 999px; font: 700 1rem/1 var(--body); text-decoration: none; border: 2px solid transparent; transition: transform .2s cubic-bezier(.3,1.6,.5,1), box-shadow .2s; }
+  .cB .btn:hover { transform: translateY(-3px) rotate(-1deg); }
+  .cB .btn--lg { min-height: 60px; padding: 1rem 1.8rem; font-size: 1.1rem; }
+  .cB .btn--sm { min-height: 44px; padding: .6rem 1.1rem; font-size: .9rem; }
+  .cB .btn--block { width: 100%; }
+  .cB .btn--citrus { background: var(--citrus); color: var(--marine); box-shadow: 0 5px 0 #b89e00; }
+  .cB .btn--coral { background: var(--coral); color: var(--marine); box-shadow: 0 5px 0 #c63b31; }
+  .cB .btn--marine { background: var(--marine); color: var(--cream); }
+  .cB .btn--outline { border-color: var(--cream); color: var(--cream); }
+  .cB .btn--outline:hover { background: var(--cream); color: var(--marine); }
+  .cB .btn--outlineDark { border-color: var(--marine); color: var(--marine); }
+  .cB .btn--ghost { background: rgb(255 255 255 / .1); color: var(--cream); }
+
+  /* Header */
+  .cB .hd { position: fixed; inset: .75rem var(--gut) auto; z-index: 50; pointer-events: none; }
+  .cB .hd__bar { pointer-events: auto; max-width: var(--max); margin: auto; display: flex; align-items: center; gap: 1rem; padding: .5rem .5rem .5rem 1rem; border-radius: 999px; background: var(--marine); color: var(--cream); box-shadow: 0 12px 30px -12px rgb(10 44 90 / .5); transition: background .3s; }
+  .cB .brand { display: flex; align-items: center; gap: .55rem; text-decoration: none; font: 800 .95rem/.9 var(--disp); letter-spacing: .02em; color: var(--cream); }
+  .cB .brand__fish { color: var(--citrus); }
+  .cB .hd__nav { display: none; gap: .3rem; margin-inline: auto; }
+  .cB .hd__nav a { text-decoration: none; font-weight: 600; font-size: .95rem; padding: .6rem .9rem; border-radius: 999px; transition: background .2s, color .2s; }
+  .cB .hd__nav a:hover { background: var(--citrus); color: var(--marine); }
+  .cB .lang { margin-left: auto; display: inline-flex; align-items: center; gap: .35rem; font-weight: 700; font-size: .85rem; text-decoration: none; padding: .7rem .8rem; border-radius: 999px; border: 1.5px solid rgb(255 246 234 / .3); }
+  .cB .hd__cta { display: none; min-height: 46px; }
+  .cB .menuBtn { width: 48px; height: 48px; border-radius: 50%; border: 0; background: var(--citrus); color: var(--marine); display: grid; place-content: center; }
+  @media (min-width: 1024px) {
+    .cB .hd__nav, .cB .hd__cta { display: flex; }
+    .cB .lang { margin-left: 0; }
+    .cB .menuBtn { display: none; }
+  }
+
+  /* Bottom sheet */
+  .cB .sheet { position: fixed; inset: 0; z-index: 70; visibility: hidden; }
+  .cB .sheet[data-open] { visibility: visible; }
+  .cB .sheet__scrim { position: absolute; inset: 0; background: rgb(5 15 30 / .55); opacity: 0; transition: opacity .3s; }
+  .cB .sheet[data-open] .sheet__scrim { opacity: 1; }
+  .cB .sheet__panel { position: absolute; inset: auto 0 0; background: var(--marine); color: var(--cream); border-radius: 32px 32px 0 0; padding: .8rem var(--gut) calc(1.5rem + env(safe-area-inset-bottom)); transform: translateY(100%); transition: transform .45s cubic-bezier(.2,.9,.2,1); max-height: 88vh; overflow: auto; }
+  .cB .sheet[data-open] .sheet__panel { transform: none; }
+  .cB .sheet__grab { display: block; width: 48px; height: 5px; border-radius: 5px; background: rgb(255 246 234 / .35); margin: 0 auto 1.2rem; }
+  .cB .sheet__nav { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .cB .sheet__nav a { text-decoration: none; font: 800 1.35rem/1 var(--disp); text-transform: uppercase; padding: 1.2rem 1rem; border-radius: 20px; background: rgb(255 255 255 / .07); }
+  .cB .sheet__nav a:nth-child(3n+1) { background: var(--coral); color: var(--marine); }
+  .cB .sheet__nav a:nth-child(3n+2) { background: var(--sky); }
+  .cB .sheet__row { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-top: 1rem; }
+  .cB .sheet__row .btn--block { grid-column: 1 / -1; }
+
+  /* Hero */
+  .cB .hero { background: var(--marine); color: var(--cream); padding: 7.5rem 0 4rem; overflow: hidden; position: relative; }
+  .cB .hero::before { content: ''; position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%; background: var(--sky); right: -20vmax; top: -25vmax; opacity: .5; }
+  .cB .hero__in { position: relative; max-width: var(--max); margin: auto; padding-inline: var(--gut); display: grid; gap: 3rem; grid-template-columns: minmax(0, 1fr); }
+  .cB .tag { display: inline-block; font-weight: 700; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; padding: .45rem .8rem; border: 1.5px solid var(--citrus); color: var(--citrus); border-radius: 999px; }
+  .cB .hero__title { font: 800 clamp(3.2rem, 11vw, 8.4rem)/.86 var(--disp); letter-spacing: -.045em; text-transform: uppercase; margin: 1.3rem 0 1.4rem; }
+  .cB .hero__title span { display: block; }
+  .cB .hero__title .hl { color: var(--citrus); }
+  .cB .hero__lead { max-width: 33rem; font-size: 1.15rem; color: rgb(255 246 234 / .85); }
+  .cB .hero__cta { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+  .cB .hero__art { position: relative; min-height: 420px; }
+  .cB .hero__card { position: absolute; overflow: hidden; border-radius: var(--r); box-shadow: 0 30px 60px -20px rgb(0 0 0 / .5); }
+  .cB .hero__card:first-child { inset: 0 12% 8% 0; transform: rotate(-3deg); border: 6px solid var(--cream); }
+  .cB .hero__card--2 { width: 44%; aspect-ratio: 1; right: 0; bottom: 0; transform: rotate(5deg); border: 6px solid var(--citrus); }
+  .cB .sticker { position: absolute; z-index: 2; display: grid; place-content: center; text-align: center; font: 800 1rem/1.05 var(--disp); text-transform: uppercase; border-radius: 50%; width: 118px; height: 118px; animation: bSpin 14s linear infinite; }
+  .cB .sticker--1 { background: var(--coral); color: var(--marine); top: -1.5rem; right: 4%; }
+  .cB .sticker--2 { background: var(--lime); color: var(--marine); left: -1rem; bottom: 12%; animation-direction: reverse; font-size: .85rem; }
+  @keyframes bSpin { 0%, 100% { transform: rotate(-10deg) scale(1); } 50% { transform: rotate(8deg) scale(1.06); } }
+  @media (min-width: 1024px) {
+    .cB .hero { min-height: 100svh; display: grid; align-items: center; padding-top: 8rem; }
+    .cB .hero__in { grid-template-columns: 1.15fr 1fr; align-items: center; }
+    .cB .hero__art { min-height: 620px; }
+  }
+
+  /* Ticker */
+  .cB .ticker { background: var(--coral); color: var(--marine); overflow: hidden; transform: rotate(-1.5deg); margin: -1.4rem -2vw 0; position: relative; z-index: 2; border-block: 4px solid var(--marine); }
+  .cB .ticker__track { display: flex; width: max-content; animation: bTick 38s linear infinite; }
+  .cB .ticker__track > span { display: flex; align-items: center; gap: 1.6rem; padding: 1rem .8rem; font: 800 clamp(1.4rem, 3vw, 2.2rem)/1 var(--disp); text-transform: uppercase; white-space: nowrap; }
+  .cB .ticker__fish { color: var(--citrus); flex: none; }
+  @keyframes bTick { to { transform: translateX(-50%); } }
+
+  /* Story bento */
+  .cB .story { padding: clamp(5rem, 10vw, 8rem) 0; }
+  .cB .bento { display: grid; gap: 1rem; margin-top: 2.5rem; grid-template-columns: minmax(0, 1fr); }
+  .cB .bento__t { border-radius: var(--r); padding: clamp(1.5rem, 3vw, 2.4rem); display: flex; flex-direction: column; gap: .8rem; }
+  .cB .bento__t--text { background: #fff; border: 2px solid var(--marine); font-size: 1.1rem; }
+  .cB .bento__t--p0 { background: var(--citrus); color: var(--marine); }
+  .cB .bento__t--p1 { background: var(--sky); color: #fff; }
+  .cB .bento__t--p2 { background: var(--coral); color: var(--marine); }
+  .cB .bento__t--quote { background: var(--marine); color: var(--cream); }
+  .cB .bento__t--quote > p:first-child { font: 800 clamp(1.6rem, 3vw, 2.4rem)/1.05 var(--disp); text-transform: uppercase; letter-spacing: -.02em; color: var(--citrus); }
+  .cB .bento__sub { color: rgb(255 246 234 / .85); }
+  .cB .bento__n { font: 800 3rem/1 var(--disp); }
+  .cB .bento h3 { font: 800 1.8rem/1 var(--disp); text-transform: uppercase; letter-spacing: -.02em; }
+  @media (min-width: 900px) {
+    .cB .bento { grid-template-columns: repeat(6, 1fr); }
+    .cB .bento__t--text, .cB .bento__t--quote { grid-column: span 3; justify-content: center; }
+    .cB .bento__t--quote { grid-row: 1; grid-column: 4 / 7; }
+    .cB .bento__t--p0, .cB .bento__t--p1, .cB .bento__t--p2 { grid-column: span 2; }
+    .cB .bento__t:hover { transform: rotate(-1deg) scale(1.01); }
+    .cB .bento__t { transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
+  }
+
+  /* Dishes rail */
+  .cB .dishes { background: var(--citrus); padding: clamp(5rem, 10vw, 8rem) 0; overflow: hidden; }
+  .cB .dishes__head { display: grid; gap: 1rem; margin-bottom: 2.5rem; }
+  .cB .dishes__head p { font-weight: 600; color: var(--marine); }
+  .cB .rail { display: flex; gap: 1.2rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: 1rem max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut))) 2rem; scrollbar-width: thin; scrollbar-color: var(--marine) transparent; }
+  .cB .dcard { position: relative; overflow: hidden; flex: none; width: min(78vw, 340px); min-height: 400px; scroll-snap-align: start; border-radius: var(--r); padding: 1.8rem; display: flex; flex-direction: column; gap: .8rem; border: 3px solid var(--marine); box-shadow: 8px 8px 0 var(--marine); transition: transform .3s cubic-bezier(.3,1.6,.5,1), box-shadow .3s; }
+  .cB .dcard:hover { transform: translate(-4px, -4px) rotate(-1.5deg); box-shadow: 14px 14px 0 var(--marine); }
+  .cB .dcard--coral { background: var(--coral); color: var(--marine); }
+  .cB .dcard--citrus { background: var(--cream); color: var(--marine); }
+  .cB .dcard--sky { background: var(--sky); color: #fff; }
+  .cB .dcard--lime { background: var(--lime); color: var(--marine); }
+  .cB .dcard--marine { background: var(--marine); color: var(--cream); }
+  .cB .dcard__cat { font: 700 .75rem/1 var(--body); letter-spacing: .12em; text-transform: uppercase; }
+  .cB .dcard__name { font: 800 2.1rem/.95 var(--disp); text-transform: uppercase; letter-spacing: -.03em; }
+  .cB .dcard__desc { font-size: .98rem; }
+  .cB .dcard__price { margin-top: auto; align-self: flex-start; font: 800 1.5rem/1 var(--disp); background: var(--marine); color: var(--citrus); padding: .7rem 1rem; border-radius: 999px; transform: rotate(-4deg); position: relative; z-index: 1; }
+  .cB .dcard--marine .dcard__price { background: var(--citrus); color: var(--marine); }
+  .cB .dcard__fish { position: absolute; right: -1.5rem; bottom: 1rem; opacity: .22; transform: rotate(-12deg); }
+
+  /* Menu */
+  .cB .menu { padding: clamp(5rem, 10vw, 8rem) 0; }
+  .cB .menu__head { display: grid; gap: 1.5rem; }
+  .cB .menu__pdf { display: flex; flex-wrap: wrap; gap: .6rem; }
+  @media (min-width: 900px) { .cB .menu__head { grid-template-columns: 1fr auto; align-items: end; } }
+  .cB .chips { display: flex; gap: .5rem; overflow-x: auto; scrollbar-width: none; margin: 2.5rem calc(-1 * var(--gut)) 2rem; padding: .3rem var(--gut); }
+  .cB .chips button { flex: none; min-height: 46px; padding: .6rem 1.15rem; border-radius: 999px; border: 2px solid var(--marine); background: #fff; font-weight: 700; font-size: .95rem; color: var(--marine); transition: background .2s, color .2s, transform .2s; }
+  .cB .chips button:hover { transform: translateY(-2px); }
+  .cB .chips button[aria-pressed='true'] { background: var(--marine); color: var(--citrus); }
+  .cB .menu__grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); align-items: start; }
+  .cB .mcat { background: #fff; border: 2px solid var(--marine); border-radius: 24px; padding: 1.5rem; }
+  .cB .mcat h3 { display: flex; justify-content: space-between; align-items: center; font: 800 1.45rem/1 var(--disp); text-transform: uppercase; color: var(--marine); padding-bottom: .9rem; margin-bottom: .5rem; border-bottom: 3px dashed var(--coral); }
+  .cB .mcat h3 span { font: 700 .8rem/1 var(--body); background: var(--citrus); padding: .35rem .6rem; border-radius: 999px; }
+  .cB .mcat li { display: flex; justify-content: space-between; gap: 1rem; padding: .5rem 0; border-bottom: 1px solid rgb(10 44 90 / .08); font-size: .97rem; }
+  .cB .mcat li:last-child { border: 0; }
+  .cB .mcat small { display: block; opacity: .7; font-size: .85rem; }
+  .cB .mcat b { white-space: nowrap; color: var(--marine); }
+
+  /* Locations */
+  .cB .loc { background: var(--marine); padding: clamp(5rem, 10vw, 8rem) 0; }
+  .cB .loc__lead { color: rgb(255 246 234 / .8); margin: 1rem 0 2.5rem; max-width: 36rem; }
+  .cB .loc__grid { display: grid; gap: 1.2rem; }
+  @media (min-width: 900px) { .cB .loc__grid { grid-template-columns: 1fr 1fr; } }
+  .cB .lcard { border-radius: var(--r); padding: clamp(1.5rem, 3vw, 2.5rem); color: var(--marine); display: flex; flex-direction: column; gap: .8rem; }
+  .cB .lcard--coral { background: var(--coral); }
+  .cB .lcard--citrus { background: var(--citrus); }
+  .cB .lcard__name { font: 800 clamp(3rem, 8vw, 5.5rem)/.85 var(--disp); text-transform: uppercase; letter-spacing: -.05em; }
+  .cB .lcard__note { font-weight: 700; }
+  .cB .lcard address { font-style: normal; display: flex; gap: .5rem; align-items: center; font-size: 1.1rem; font-weight: 600; }
+  .cB .lcard__hours { font-size: .92rem; }
+  .cB .lcard__btns { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .cB .lcard__map { margin-top: .5rem; aspect-ratio: 16 / 9; border-radius: 20px; overflow: hidden; border: 3px solid var(--marine); }
+  .cB .lcard__map button, .cB .lcard__map iframe { width: 100%; height: 100%; border: 0; }
+  .cB .lcard__map button { display: grid; place-content: center; justify-items: center; gap: .3rem; background: var(--cream); color: var(--marine); }
+  .cB .lcard__map b { font: 800 1.3rem/1 var(--disp); text-transform: uppercase; }
+  .cB .lcard__map small { font-size: .8rem; }
+
+  /* Reviews */
+  .cB .rev { padding: clamp(5rem, 10vw, 8rem) 0; }
+  .cB .rev__lead { margin: 1rem 0 2.5rem; max-width: 36rem; }
+  .cB .rev__grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+  .cB .rcard { border-radius: var(--r); padding: 1.8rem; background: #fff; border: 3px solid var(--marine); display: flex; flex-direction: column; gap: .9rem; align-items: flex-start; }
+  .cB .rcard--tripadvisor { background: var(--lime); }
+  .cB .rcard__top { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .cB .rcard__plat, .cB .rcard__loc { font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; padding: .4rem .7rem; border-radius: 999px; background: var(--marine); color: var(--cream); }
+  .cB .rcard__loc { background: var(--coral); color: var(--marine); }
+  .cB .rcard__score { font: 800 4.5rem/1 var(--disp); color: var(--marine); }
+  .cB .rcard__score small { font-size: 1rem; font-family: var(--body); }
+  .cB .rcard__stars { display: flex; gap: .2rem; color: var(--citrus); filter: drop-shadow(1px 1px 0 var(--marine)); }
+  .cB .rcard--tripadvisor .rcard__stars { color: var(--marine); filter: none; }
+  .cB .rcard__note { font-size: .9rem; font-weight: 600; }
+  .cB .rcard__write { font-weight: 700; font-size: .9rem; }
+
+  /* Gallery */
+  .cB .gal { padding: 0 0 clamp(5rem, 10vw, 8rem); }
+  .cB .gal__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 2.5rem; }
+  .cB .gal__social { display: flex; gap: .6rem; }
+  .cB .soc { width: 54px; height: 54px; border-radius: 50%; display: grid; place-content: center; background: var(--marine); color: var(--citrus); transition: transform .2s; }
+  .cB .soc:hover { transform: rotate(-10deg) scale(1.08); }
+  .cB .gal__grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 170px; gap: .8rem; }
+  .cB .gtile { border-radius: 22px; overflow: hidden; }
+  .cB .gtile > a, .cB .gtile picture { display: block; height: 100%; }
+  .cB .gtile .ph { height: 100%; min-height: 0; }
+  .cB .gtile img { transition: transform .6s; }
+  .cB .gtile a:hover img { transform: scale(1.06) rotate(1deg); }
+  .cB .gtile--0 { grid-row: span 2; }
+  .cB .gtile--1 { grid-column: span 1; }
+  .cB .gtile--2 { grid-column: span 2; grid-row: span 2; }
+  .cB .gtile--5 { grid-column: span 2; }
+  @media (min-width: 900px) {
+    .cB .gal__grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 220px; gap: 1rem; }
+    .cB .gtile--0 { grid-row: span 2; }
+    .cB .gtile--1 { grid-column: span 2; }
+    .cB .gtile--2 { grid-column: span 1; grid-row: span 2; }
+    .cB .gtile--5 { grid-column: 1 / -1; }
+  }
+
+  /* Footer */
+  .cB .ft { background: var(--coral); color: var(--marine); padding: clamp(4rem, 9vw, 7rem) 0 7rem; }
+  .cB .ft__big { display: flex; align-items: center; justify-content: space-between; gap: 1rem; text-decoration: none; font: 800 clamp(3.4rem, 14vw, 11rem)/.85 var(--disp); text-transform: uppercase; letter-spacing: -.05em; color: var(--marine); border-bottom: 4px solid var(--marine); padding-bottom: 1.5rem; }
+  .cB .ft__big svg { flex: none; width: clamp(48px, 9vw, 120px); height: auto; transition: transform .3s; }
+  .cB .ft__big:hover svg { transform: rotate(-12deg) scale(1.1); }
+  .cB .ft__lead { font-weight: 700; margin: 1.2rem 0 3rem; font-size: 1.15rem; }
+  .cB .ft__lead a { white-space: nowrap; }
+  .cB .ft__grid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .cB .ft h3 { font: 800 1.2rem/1 var(--disp); text-transform: uppercase; margin-bottom: .7rem; }
+  .cB .ft address { font-style: normal; }
+  .cB .ft__grid > div { display: flex; flex-direction: column; align-items: flex-start; }
+  .cB .ft__grid a { font-weight: 600; padding: .3rem 0; }
+  .cB .ft__legal { margin-top: 3rem; font-size: .85rem; font-weight: 500; }
+
+  .cB .mbar { position: fixed; left: .75rem; right: .75rem; bottom: calc(.75rem + env(safe-area-inset-bottom)); z-index: 40; display: flex; align-items: center; justify-content: center; gap: .6rem; min-height: 56px; border-radius: 999px; background: var(--citrus); color: var(--marine); font: 800 1.05rem/1 var(--body); text-decoration: none; border: 3px solid var(--marine); box-shadow: 0 5px 0 var(--marine); }
+  @media (min-width: 1024px) { .cB .mbar { display: none; } }
+  .cB .js-reveal [data-reveal], .js-reveal .cB [data-reveal] { transform: translateY(40px) rotate(1.5deg); transition-timing-function: cubic-bezier(.3,1.4,.5,1); }
+  .js-reveal .cB [data-reveal].is-in { transform: none; }
+</style>

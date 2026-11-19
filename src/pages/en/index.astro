@@ -1,0 +1,6 @@
+---
+import Comparison from '../../components/shared/Comparison.astro';
+import Concept from '../../components/shared/Concept.astro';
+import { DEFAULT_CONCEPT } from '../../data/site';
+---
+{DEFAULT_CONCEPT ? <Concept id={DEFAULT_CONCEPT} lang="en" path="" asHome /> : <Comparison lang="en" path="" />}
