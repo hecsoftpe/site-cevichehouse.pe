@@ -32,7 +32,7 @@ const abs = (p: string) => new URL(base + p.replace(/^\//, ''), site).href;
 const esPath = path;
 const enPath = `en/${path}`;
 const canonical = abs(Astro.props.canonicalPath ?? (lang === 'en' ? enPath : esPath));
-const og = await getImage({ src: PHOTOS.ceviche, width: 1080, format: 'jpg' });
+const og = await getImage({ src: PHOTOS.ceviche, width: 1080, height: 566, fit: 'cover', position: 'center', format: 'jpg' });
 const ogUrl = new URL(og.src, site).href;
 ---
 <!doctype html>
