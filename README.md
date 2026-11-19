@@ -2,7 +2,7 @@
 
 Bilingual (ES/EN) website for **Ceviche House**, a cevichería with locations in Miraflores (Ca. Narciso de la Colina 184) and Barranco (Jr. Zepita 203), Lima. Bookings go through WhatsApp (+51 998 400 543).
 
-The repository contains **three complete design alternatives** plus a comparison page:
+The repository contains **four complete design alternatives** plus a comparison page:
 
 | Route | Contents |
 |---|---|
@@ -10,6 +10,7 @@ The repository contains **three complete design alternatives** plus a comparison
 | `/concept-a/` · `/en/concept-a/` | **A: Pacific Editorial**: a magazine feature. Newsreader + Instrument Sans, ivory/ink/ají |
 | `/concept-b/` · `/en/concept-b/` | **B: Lima Vibrant**: barrio energy. Condensed Bricolage Grotesque, ink/camote, dish rail and sticky booking bar |
 | `/concept-c/` · `/en/concept-c/` | **C: Minimal Contemporary**: a numbered index on stone paper. Instrument Serif + Sans, ivory/stone/olive/ink |
+| `/concept-d/` · `/en/concept-d/` | **D: Parte de Mar**: the day's slip. Big Shoulders + Source Sans 3 + IBM Plex Mono, apron/paper/rocoto/corn, lot labels, stencil stamps, contact sheet |
 | `/concepts/` | Comparison (always available) |
 | `/compare/?c=a&device=mobile&lang=es` | Desktop / tablet / mobile preview in a device frame |
 
@@ -18,20 +19,20 @@ Every concept includes navigation with a mobile menu, a hero, our story, signatu
 ## Stack
 
 - [Astro](https://astro.build) as a static site, with TypeScript, no client-side framework and about 3 KB of JS.
-- One brand core ("Tinta & Piedra") in `src/styles/tokens.css`, expressed three ways. See `docs/DESIGN-SYSTEM.md`.
-- Self-hosted fonts via `@fontsource` (Newsreader, Instrument Sans/Serif, Bricolage Grotesque), loading only the axes in use.
+- One palette per concept, sampled from the restaurant's own photos, in `src/styles/tokens.css`. See `docs/PARTE-DE-MAR.md`.
+- Self-hosted fonts via `@fontsource` (Newsreader, Instrument Sans/Serif, Bricolage Grotesque, Big Shoulders, Source Sans 3, IBM Plex Mono), loading only the axes in use.
 - Images optimised to AVIF/WebP with `astro:assets`.
 - SEO: canonical, hreflang, Open Graph, JSON-LD (`Restaurant` ×2), sitemap and robots.
 
 ```
 src/data/        business data, menu, reviews, gallery, concepts  ← edit content here
 src/i18n/        ES/EN copy and URL helpers
-src/components/  a/ b/ c/ (one per concept) + shared/
+src/components/  a/ b/ c/ d/ (one per concept) + shared/
 src/layouts/     Base.astro (head, SEO, lightbox)
 src/styles/      tokens.css (brand core)
 src/scripts/     ui.ts (nav, reveal, filters, map, lightbox)
 scripts/         retouch.py (photo cleanup for printed/scanned sources)
-docs/            DESIGN-AUDIT · DESIGN-SYSTEM · PHOTO-ASSET-AUDIT · ASSETS · CONTENT-NOTES · CHOOSING-DEFAULT
+docs/            PARTE-DE-MAR · DESIGN-AUDIT · DESIGN-SYSTEM · PHOTO-ASSET-AUDIT · ASSETS · CONTENT-NOTES · CHOOSING-DEFAULT
 ```
 
 ## Development

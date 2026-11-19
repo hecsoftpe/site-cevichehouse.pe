@@ -13,7 +13,7 @@ import Icon from '../shared/Icon.astro';
 import Photo from '../shared/Photo.astro';
 import { type Lang, LOCATIONS, SOCIAL, MENU_PDF, PHONE_DISPLAY, PHONE_E164, whatsappLink, mapsDirections, mapsEmbed } from '../../data/site';
 import { MENU, priceOf, signatureItems } from '../../data/menu';
-import { P, GALLERY } from '../../data/gallery';
+import { P, IG } from '../../data/gallery';
 import { REVIEWS } from '../../data/reviews';
 import { t, url } from '../../i18n';
 
@@ -35,7 +35,7 @@ const ticker = es
   : ['Ceviche made to order', "Tiger's milk", 'Catch of the day', 'Jalea mixta', 'Pisco sour', 'Miraflores', 'Barranco'];
 const stamp = 'Miraflores · Barranco · Lima · ';
 ---
-<Base lang={lang} path={path} bodyClass="cB" indexable={indexable} canonicalPath={canonicalPath} themeColor="#0f1e26">
+<Base lang={lang} path={path} bodyClass="cB" indexable={indexable} canonicalPath={canonicalPath} themeColor="#6e2230">
   <a class="skip" href="#main">{s.skip}</a>
 
   <header class="hd" data-header>
@@ -82,7 +82,7 @@ const stamp = 'Miraflores · Barranco · Lima · ';
           </div>
         </div>
         <div class="hero__art">
-          <div class="hero__main"><Photo src={P.ceviche.src} alt={P.ceviche[lang]} eager sizes="(min-width: 1024px) 46vw, 100vw" position={P.ceviche.focus} /></div>
+          <div class="hero__main"><Photo src={IG.ceviche.src} alt={IG.ceviche[lang]} eager sizes="(min-width: 1024px) 46vw, 100vw" position={IG.ceviche.focus} /></div>
           <div class="hero__inset"><Photo src={P.mariscosDetalle.src} alt={P.mariscosDetalle[lang]} sizes="(min-width: 1024px) 220px, 34vw" /></div>
           <svg class="stamp" viewBox="0 0 120 120" aria-hidden="true">
             <defs><path id="b-ring" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0" /></defs>
@@ -187,7 +187,7 @@ const stamp = 'Miraflores · Barranco · Lima · ';
         <p data-reveal>{s.galleryLead}</p>
       </div>
       <ul class="strip">
-        {GALLERY.map((g, i) => (
+        {[IG.casona, IG.mozos, IG.terraza, IG.review].map((g, i) => (
           <li class={`strip__it strip__it--${i}`}>
             <a href={g.src.src} data-lightbox data-alt={g[lang]}>
               <Photo src={g.src} alt={g[lang]} sizes={g.detail ? '(min-width: 900px) 22vw, 60vw' : '(min-width: 900px) 34vw, 80vw'} position={g.focus} />
@@ -292,13 +292,13 @@ const stamp = 'Miraflores · Barranco · Lima · ';
 
 <style is:global>
   .cB {
-    --bg: var(--ivory-100); --fg: var(--ink-900); --muted: #57564f; --line: rgb(15 30 38 / .18);
-    --dark: var(--ink-900); --on-dark: var(--ivory-50); --on-dark-mut: rgb(247 243 236 / .7); --line-dark: rgb(247 243 236 / .16);
-    --hot: var(--camote-400); --hot-ink: var(--aji-700);
+    --bg: var(--casona-cal); --fg: var(--casona-vino); --muted: var(--casona-mut); --line: rgb(42 14 19 / .18);
+    --dark: var(--casona-granate); --on-dark: var(--casona-cal); --on-dark-mut: rgb(246 241 236 / .8); --line-dark: rgb(246 241 236 / .22);
+    --hot: var(--casona-ambar); --hot-ink: var(--casona-granate-txt);
     --disp: 'Bricolage Grotesque Variable', 'Arial Narrow', sans-serif; --sans: 'Instrument Sans Variable', system-ui, sans-serif;
     background: var(--bg); color: var(--fg); font: 400 1.0625rem/1.6 var(--sans);
   }
-  .cB ::selection { background: var(--hot); color: var(--ink-900); }
+  .cB ::selection { background: var(--hot); color: var(--casona-vino); }
   .cB :focus-visible { outline-color: var(--hot); }
   .cB .wrap { max-width: var(--max); margin: auto; padding-inline: var(--gut); }
   .cB .h2 { font: 700 clamp(2.4rem, 6vw, 5rem)/.95 var(--disp); font-stretch: 75%; letter-spacing: -.01em; text-wrap: balance; }
@@ -309,18 +309,18 @@ const stamp = 'Miraflores · Barranco · Lima · ';
   .cB .btn { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 48px; padding: .75rem 1.3rem; border-radius: 4px; font: 650 .98rem/1 var(--sans); text-decoration: none; border: 1.5px solid transparent; transition: background var(--dur), color var(--dur), border-color var(--dur), transform var(--dur) var(--ease); }
   .cB .btn:active { transform: translateY(1px); }
   .cB .btn--lg { min-height: 56px; padding: 1rem 1.6rem; font-size: 1.05rem; }
-  .cB .btn--camote { background: var(--hot); color: var(--ink-950); }
-  .cB .btn--camote:hover { background: #f0a965; }
+  .cB .btn--camote { background: var(--hot); color: var(--casona-vino); }
+  .cB .btn--camote:hover { background: var(--casona-ambar-2); }
   .cB .btn--ghost { border-color: var(--line-dark); color: var(--on-dark); background: transparent; }
   .cB .btn--ghost:hover { border-color: var(--on-dark); }
-  .cB .btn--ink { background: var(--ink-900); color: var(--ivory-50); }
-  .cB .btn--ink:hover { background: var(--ink-700); }
+  .cB .btn--ink { background: var(--casona-granate); color: var(--casona-cal); }
+  .cB .btn--ink:hover { background: var(--casona-granate-2); }
   .cB .btn--line { border-color: var(--line); color: var(--fg); }
   .cB .btn--line:hover { border-color: var(--fg); }
 
   /* Header */
   .cB .hd { position: fixed; inset: 0 0 auto; z-index: 50; color: var(--on-dark); transition: background var(--dur); }
-  .cB .hd[data-scrolled] { background: var(--ink-900); box-shadow: 0 1px 0 var(--line-dark); }
+  .cB .hd[data-scrolled] { background: var(--casona-granate); box-shadow: 0 1px 0 var(--line-dark); }
   .cB .hd__bar { max-width: var(--max); margin: auto; padding: .7rem var(--gut); display: flex; align-items: center; gap: 1rem; }
   .cB .brand { font: 800 1.45rem/1 var(--disp); font-stretch: 75%; text-decoration: none; letter-spacing: -.01em; display: inline-flex; gap: .25em; margin-right: auto; }
   .cB .brand span { color: var(--hot); }
@@ -334,9 +334,9 @@ const stamp = 'Miraflores · Barranco · Lima · ';
 
   .cB .sheet { position: fixed; inset: 0; z-index: 80; visibility: hidden; }
   .cB .sheet[data-open] { visibility: visible; }
-  .cB .sheet__scrim { position: absolute; inset: 0; background: rgb(11 22 28 / .6); opacity: 0; transition: opacity .3s; }
+  .cB .sheet__scrim { position: absolute; inset: 0; background: rgb(42 14 19 / .6); opacity: 0; transition: opacity .3s; }
   .cB .sheet[data-open] .sheet__scrim { opacity: 1; }
-  .cB .sheet__panel { position: absolute; inset: auto 0 0; background: var(--ink-900); color: var(--on-dark); padding: 1.5rem var(--gut) calc(1.5rem + env(safe-area-inset-bottom)); transform: translateY(100%); transition: transform .4s var(--ease); border-top: 3px solid var(--hot); }
+  .cB .sheet__panel { position: absolute; inset: auto 0 0; background: var(--casona-granate); color: var(--on-dark); padding: 1.5rem var(--gut) calc(1.5rem + env(safe-area-inset-bottom)); transform: translateY(100%); transition: transform .4s var(--ease); border-top: 3px solid var(--hot); }
   .cB .sheet[data-open] .sheet__panel { transform: none; }
   .cB .sheet__nav { display: grid; margin-bottom: 1.5rem; }
   .cB .sheet__nav a { font: 700 2.4rem/1.15 var(--disp); font-stretch: 75%; text-decoration: none; padding: .3rem 0; border-bottom: 1px solid var(--line-dark); }
@@ -368,7 +368,7 @@ const stamp = 'Miraflores · Barranco · Lima · ';
     .cB .stamp { right: -1.5rem; top: -2.5rem; width: 132px; height: 132px; }
   }
 
-  .cB .ticker { background: var(--hot); color: var(--ink-950); overflow: hidden; border-block: 1px solid var(--ink-900); }
+  .cB .ticker { background: var(--hot); color: var(--casona-vino); overflow: hidden; border-block: 1px solid var(--casona-vino); }
   .cB .ticker__track { display: flex; width: max-content; }
   .cB .ticker__track > span { display: flex; align-items: center; gap: 1.6rem; padding: .8rem .8rem; font: 700 clamp(1.3rem, 2.4vw, 1.9rem)/1 var(--disp); font-stretch: 75%; white-space: nowrap; }
   .cB .ticker i { font-style: normal; opacity: .45; }
@@ -401,7 +401,7 @@ const stamp = 'Miraflores · Barranco · Lima · ';
   .cB .rail { display: grid; grid-auto-flow: column; grid-auto-columns: min(80vw, 320px); gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 var(--gut) 1.5rem; scroll-padding-inline: var(--gut); scrollbar-width: thin; scrollbar-color: var(--hot) transparent; }
   @media (min-width: 1400px) { .cB .rail { padding-left: calc((100vw - var(--max)) / 2 + var(--gut)); scroll-padding-left: calc((100vw - var(--max)) / 2 + var(--gut)); } }
   .cB .rail:focus-visible { outline-offset: -3px; }
-  .cB .dcard { scroll-snap-align: start; position: relative; display: flex; flex-direction: column; gap: .5rem; min-height: 25rem; padding: 1.5rem; background: var(--ink-800); border-top: 3px solid var(--hot); }
+  .cB .dcard { scroll-snap-align: start; position: relative; display: flex; flex-direction: column; gap: .5rem; min-height: 25rem; padding: 1.5rem; background: var(--casona-granate-2); border-top: 3px solid var(--hot); }
   .cB .dcard__n { font: 800 1rem/1 var(--disp); color: var(--hot); }
   .cB .dcard__cat { font-size: .8rem; color: var(--on-dark-mut); margin-top: auto; }
   .cB .dcard__name { font: 700 2.1rem/.98 var(--disp); font-stretch: 75%; }
@@ -409,7 +409,7 @@ const stamp = 'Miraflores · Barranco · Lima · ';
   .cB .dcard__price { font: 800 1.8rem/1 var(--disp); font-stretch: 75%; color: var(--hot); margin-top: .8rem; font-variant-numeric: tabular-nums; }
   .cB .dcard--photo { padding: 0; border-top: 0; overflow: hidden; grid-column: span 1; }
   .cB .dcard--photo picture { position: absolute; inset: 0; }
-  .cB .dcard__cap { position: relative; margin-top: auto; padding: 3rem 1.2rem 1.1rem; font-size: .85rem; background: linear-gradient(transparent, rgb(11 22 28 / .85)); }
+  .cB .dcard__cap { position: relative; margin-top: auto; padding: .9rem 1.2rem 1rem; font-size: .85rem; background: var(--casona-rejeria); }
 
   /* Menu */
   .cB .menu { padding: var(--section) 0; }
@@ -421,7 +421,7 @@ const stamp = 'Miraflores · Barranco · Lima · ';
   @media (min-width: 1024px) { .cB .tabs { position: static; flex-wrap: wrap; margin-inline: 0; padding-inline: 0; } }
   .cB .tabs button { flex: none; min-height: 44px; padding: .5rem .95rem; border: 1.5px solid var(--line); border-radius: 4px; background: transparent; font: 600 .92rem/1 var(--sans); transition: background var(--dur), border-color var(--dur); }
   .cB .tabs button:hover { border-color: var(--fg); }
-  .cB .tabs button[aria-pressed='true'] { background: var(--ink-900); border-color: var(--ink-900); color: var(--ivory-50); }
+  .cB .tabs button[aria-pressed='true'] { background: var(--casona-granate); border-color: var(--casona-granate); color: var(--casona-cal); }
   .cB .menu__grid { display: grid; gap: 2.5rem 3rem; }
   @media (min-width: 720px) { .cB .menu__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 1100px) { .cB .menu__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
@@ -433,7 +433,7 @@ const stamp = 'Miraflores · Barranco · Lima · ';
   .cB .menu__note { margin-top: 2rem; font-size: .88rem; color: var(--muted); }
 
   /* Gallery */
-  .cB .gal { background: var(--dark); color: var(--on-dark); padding: var(--section) 0; }
+  .cB .gal { background: var(--casona-rejeria); color: var(--on-dark); padding: var(--section) 0; }
   .cB .gal__head { display: grid; gap: 1rem; margin-bottom: 2.5rem; }
   .cB .gal__head > p { color: var(--on-dark-mut); max-width: 26rem; }
   @media (min-width: 900px) { .cB .gal__head { grid-template-columns: 1fr auto; align-items: end; } }
@@ -463,18 +463,18 @@ const stamp = 'Miraflores · Barranco · Lima · ';
   .cB .loc { padding: var(--section) 0; }
   .cB .loc__grid { display: grid; gap: 1.5rem; margin-top: 2.5rem; }
   @media (min-width: 900px) { .cB .loc__grid { grid-template-columns: 1fr 1fr; } }
-  .cB .lcard { padding: clamp(1.5rem, 3vw, 2.5rem); background: var(--ivory-50); border-top: 6px solid var(--hot); display: flex; flex-direction: column; }
-  .cB .lcard--1 { border-top-color: var(--cobalt-500); }
+  .cB .lcard { padding: clamp(1.5rem, 3vw, 2.5rem); background: var(--casona-cal-2); border-top: 6px solid var(--casona-granate); display: flex; flex-direction: column; }
+  .cB .lcard--1 { border-top-color: var(--casona-rejeria); }
   .cB .lcard__name { font: 800 clamp(3rem, 7vw, 5.4rem)/.9 var(--disp); font-stretch: 75%; letter-spacing: -.02em; }
   .cB .lcard__note { font-weight: 600; margin: .7rem 0 1rem; color: var(--hot-ink); }
-  .cB .lcard--1 .lcard__note { color: var(--cobalt-700); }
+  .cB .lcard--1 .lcard__note { color: var(--casona-rejeria); }
   .cB .lcard address { font-style: normal; font-size: 1.05rem; }
   .cB .lcard__hours { font-size: .9rem; color: var(--muted); margin-top: .3rem; }
   .cB .lcard__btns { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.4rem 0; }
-  .cB .lcard__map { aspect-ratio: 16 / 9; margin-top: auto; background: var(--stone-200); }
+  .cB .lcard__map { aspect-ratio: 16 / 9; margin-top: auto; background: var(--casona-sombrilla); }
   .cB .lcard__map button, .cB .lcard__map iframe { width: 100%; height: 100%; border: 0; }
-  .cB .lcard__map button { display: grid; place-content: center; justify-items: center; gap: .3rem; background: var(--stone-200); transition: background var(--dur); }
-  .cB .lcard__map button:hover { background: var(--stone-300); }
+  .cB .lcard__map button { display: grid; place-content: center; justify-items: center; gap: .3rem; background: var(--casona-sombrilla); transition: background var(--dur); }
+  .cB .lcard__map button:hover { background: #dfc59f; }
   .cB .lcard__map b { font: 700 1.5rem/1 var(--disp); font-stretch: 75%; }
   .cB .lcard__map small { font-size: .8rem; color: var(--muted); }
 
@@ -491,7 +491,7 @@ const stamp = 'Miraflores · Barranco · Lima · ';
   .cB .rev__links a:hover b { color: var(--hot-ink); }
 
   /* Footer */
-  .cB .ft { background: var(--dark); color: var(--on-dark); padding: var(--section) 0 7rem; }
+  .cB .ft { background: var(--casona-vino); color: var(--on-dark); padding: var(--section) 0 7rem; }
   .cB .ft__big { display: inline-flex; align-items: center; gap: 1rem; font: 800 clamp(3rem, 9vw, 8rem)/.9 var(--disp); font-stretch: 75%; letter-spacing: -.02em; text-decoration: none; }
   .cB .ft__big svg { color: var(--hot); flex: none; transition: transform var(--dur) var(--ease); }
   .cB .ft__big:hover svg { transform: translateX(8px); }
@@ -502,10 +502,10 @@ const stamp = 'Miraflores · Barranco · Lima · ';
   .cB .ft ul a { display: inline-block; padding: .3rem 0; text-decoration: none; color: var(--on-dark-mut); }
   .cB .ft ul a:hover { color: var(--on-dark); text-decoration: underline; }
   .cB .ft__tag { color: var(--on-dark-mut); margin-top: .6rem; max-width: 22ch; }
-  .cB .ft__legal { font-size: .8rem; color: rgb(247 243 236 / .5); }
+  .cB .ft__legal { font-size: .8rem; color: rgb(246 241 236 / .7); }
 
   /* Sticky mobile booking bar */
-  .cB .bar { position: fixed; inset: auto 0 0; z-index: 45; display: flex; gap: .5rem; padding: .6rem var(--gut) calc(.6rem + env(safe-area-inset-bottom)); background: var(--ink-900); border-top: 1px solid var(--line-dark); }
+  .cB .bar { position: fixed; inset: auto 0 0; z-index: 45; display: flex; gap: .5rem; padding: .6rem var(--gut) calc(.6rem + env(safe-area-inset-bottom)); background: var(--casona-granate); border-top: 1px solid var(--line-dark); }
   .cB .bar .btn--camote { flex: 1; }
   html[data-nav-open] .cB .bar { display: none; }
   @media (min-width: 1024px) { .cB .bar { display: none; } }

@@ -4,6 +4,8 @@ import '@fontsource-variable/newsreader/wght-italic.css';
 import '@fontsource-variable/instrument-sans/wght.css';
 import '@fontsource-variable/bricolage-grotesque/wdth.css';
 import '@fontsource/instrument-serif/400.css';
+import '@fontsource-variable/big-shoulders-display/wght';
+import '@fontsource-variable/source-sans-3/wght';
 import Base from '../../layouts/Base.astro';
 import Icon from './Icon.astro';
 import Fish from './Fish.astro';
@@ -17,25 +19,25 @@ const other: Lang = lang === 'es' ? 'en' : 'es';
 const L = lang === 'es'
   ? {
       title: 'Ceviche House — Propuestas de diseño',
-      kicker: 'Propuesta de sitio web · 3 conceptos',
-      h1: 'Tres maneras de contar Ceviche House.',
-      lead: 'Tres diseños completos con el mismo contenido real: carta oficial, dos locales, reservas por WhatsApp, reseñas, galería y versión en español e inglés. Explora cada uno en escritorio y móvil y elige el que será la página principal.',
+      kicker: 'Propuesta de sitio web · 4 conceptos',
+      h1: 'Cuatro maneras de contar Ceviche House.',
+      lead: 'Cuatro diseños completos con el mismo contenido real: carta oficial, dos locales, reservas por WhatsApp, reseñas, galería y versión en español e inglés. Explora cada uno en escritorio y móvil y elige el que será la página principal.',
       open: 'Abrir sitio completo', desktop: 'Vista escritorio', mobile: 'Vista móvil', audience: 'Público', palette: 'Paleta', type: 'Tipografía',
       choose: '¿Cómo elegir?',
-      chooseP: 'Indícanos el concepto elegido. Se publicará en la raíz del sitio con indexación en Google; las tres propuestas seguirán disponibles en /concept-a/, /concept-b/ y /concept-c/.',
-      same: 'Funciones comunes a los tres', features: ['Reserva por WhatsApp con mensaje pre-llenado', 'Carta completa con filtros + PDFs ES/EN', 'Platos destacados con precios reales', 'Dos locales con mapa bajo demanda', 'Reseñas Google y Tripadvisor por local', 'Galería con visor', 'Español / English', 'SEO local + datos estructurados'],
+      chooseP: 'Indícanos el concepto elegido. Se publicará en la raíz del sitio con indexación en Google; las cuatro propuestas seguirán disponibles en /concept-a/ … /concept-d/.',
+      same: 'Funciones comunes a los cuatro', features: ['Reserva por WhatsApp con mensaje pre-llenado', 'Carta completa con filtros + PDFs ES/EN', 'Platos destacados con precios reales', 'Dos locales con mapa bajo demanda', 'Reseñas Google y Tripadvisor por local', 'Galería con visor', 'Español / English', 'SEO local + datos estructurados'],
       pending: 'Pendiente del restaurante: fotos originales en alta resolución (platos, salones, bebidas), logo, horario y calificaciones verificadas. Ver docs/PHOTO-ASSET-AUDIT.md.',
       lang: 'English',
     }
   : {
       title: 'Ceviche House — Design proposals',
-      kicker: 'Website proposal · 3 concepts',
-      h1: 'Three ways to tell the Ceviche House story.',
-      lead: 'Three complete designs built on the same real content: official menu, two locations, WhatsApp booking, reviews, gallery and Spanish/English versions. Explore each on desktop and mobile, then pick the one that becomes the homepage.',
+      kicker: 'Website proposal · 4 concepts',
+      h1: 'Four ways to tell the Ceviche House story.',
+      lead: 'Four complete designs built on the same real content: official menu, two locations, WhatsApp booking, reviews, gallery and Spanish/English versions. Explore each on desktop and mobile, then pick the one that becomes the homepage.',
       open: 'Open full site', desktop: 'Desktop view', mobile: 'Mobile view', audience: 'Audience', palette: 'Palette', type: 'Typography',
       choose: 'How to choose',
-      chooseP: 'Tell us which concept you prefer. It will be published at the site root and indexed by Google; all three proposals remain available at /concept-a/, /concept-b/ and /concept-c/.',
-      same: 'Shared by all three', features: ['WhatsApp booking with pre-filled message', 'Full menu with filters + ES/EN PDFs', 'Signature dishes with real prices', 'Two locations with on-demand map', 'Google & Tripadvisor reviews per location', 'Gallery with lightbox', 'Español / English', 'Local SEO + structured data'],
+      chooseP: 'Tell us which concept you prefer. It will be published at the site root and indexed by Google; all four proposals remain available at /concept-a/ … /concept-d/.',
+      same: 'Shared by all four', features: ['WhatsApp booking with pre-filled message', 'Full menu with filters + ES/EN PDFs', 'Signature dishes with real prices', 'Two locations with on-demand map', 'Google & Tripadvisor reviews per location', 'Gallery with lightbox', 'Español / English', 'Local SEO + structured data'],
       pending: 'Pending from the restaurant: high-resolution original photos (dishes, dining rooms, drinks), logo, opening hours and verified ratings. See docs/PHOTO-ASSET-AUDIT.md.',
       lang: 'Español',
     };
@@ -60,7 +62,7 @@ const viewer = (id: string, device: string) => `${url('compare/')}?c=${id}&devic
     {CONCEPTS.map((c, i) => (
       <article class={`cc cc--${c.id}`} id={`concept-${c.id}`}>
         <div class="cc__info">
-          <p class="cc__no">Concept {c.id.toUpperCase()} <span>0{i + 1} / 03</span></p>
+          <p class="cc__no">Concept {c.id.toUpperCase()} <span>0{i + 1} / 0{CONCEPTS.length}</span></p>
           <h2>{c.name}</h2>
           <p class="cc__tag">{c.tagline[lang]}</p>
           <p>{c.description[lang]}</p>

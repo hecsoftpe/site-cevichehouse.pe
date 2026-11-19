@@ -2,6 +2,12 @@ import ceviche from '../assets/photos/ceviche.jpg';
 import cevicheDetalle from '../assets/photos/ceviche-detalle.jpg';
 import mariscos from '../assets/photos/mariscos.jpg';
 import mariscosDetalle from '../assets/photos/mariscos-detalle.jpg';
+import igCeviche from '../assets/photos/ig/ceviche-pesca-del-dia.jpg';
+import igMozos from '../assets/photos/ig/mozos-bn.jpg';
+import igHuarique from '../assets/photos/ig/huarique-miraflores.jpg';
+import igTerraza from '../assets/photos/ig/terraza-barranco.jpg';
+import igCasona from '../assets/photos/ig/casona-barranco.jpg';
+import igReview from '../assets/photos/ig/unico-review.jpg';
 import type { ImageMetadata } from 'astro';
 
 /**
@@ -55,3 +61,45 @@ export const P: Record<'ceviche' | 'cevicheDetalle' | 'mariscos' | 'mariscosDeta
 
 /** Gallery order, used by every concept. */
 export const GALLERY: PhotoItem[] = [P.ceviche, P.mariscosDetalle, P.mariscos, P.cevicheDetalle];
+// (GALLERY is the menu-PDF set used by A/B/C before the Instagram photos; concepts now compose their own sets from P and IG.)
+
+/**
+ * Photos from the restaurant's own Instagram (@ceviche_house.pe), taken from
+ * the public profile embed (instagram.com/ceviche_house.pe/embed/), which only
+ * exposes the 6 latest posts at 1080 px. Provenance and analysis:
+ * docs/PARTE-DE-MAR.md and docs/PHOTO-ASSET-AUDIT.md. Guests are identifiable
+ * in huarique / terraza / casona: the restaurant should confirm consent before
+ * production.
+ */
+export const IG: Record<'ceviche' | 'mozos' | 'huarique' | 'terraza' | 'casona' | 'review', PhotoItem> = {
+  ceviche: {
+    key: 'ig-ceviche', src: igCeviche, focus: '50% 58%',
+    es: 'Ceviche de pesca del día con camote, choclo, lechuga y rocoto, servido en la mesa',
+    en: 'Catch-of-the-day ceviche with sweet potato, corn, lettuce and rocoto, served at the table',
+  },
+  mozos: {
+    key: 'ig-mozos', src: igMozos, focus: '50% 40%',
+    es: 'El equipo de sala de Ceviche House, de camisa, corbata y mandil negro',
+    en: 'The Ceviche House floor team in shirts, ties and black aprons',
+  },
+  huarique: {
+    key: 'ig-huarique', src: igHuarique, focus: '50% 50%',
+    es: 'El huarique de Miraflores: mesas en la vereda bajo el toldo azul',
+    en: 'The Miraflores huarique: pavement tables under the blue awning',
+  },
+  terraza: {
+    key: 'ig-terraza', src: igTerraza, focus: '60% 45%',
+    es: 'La terraza de la casona de Barranco, frente al mar',
+    en: 'The terrace of the Barranco casona, facing the sea',
+  },
+  casona: {
+    key: 'ig-casona', src: igCasona, focus: '55% 50%',
+    es: 'El balcón de la casona de Barranco: muros granate, sombrillas y luces',
+    en: 'The balcony of the Barranco casona: garnet walls, umbrellas and string lights',
+  },
+  review: {
+    key: 'ig-review', src: igReview, focus: '50% 62%',
+    es: 'Plancha y bowl vacíos sobre la barra de acero: “el único review que importa”',
+    en: 'An empty skillet and bowl on the steel counter: “the only review that matters”',
+  },
+};

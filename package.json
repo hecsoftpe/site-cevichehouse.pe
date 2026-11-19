@@ -10,9 +10,13 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.6",
+    "@fontsource-variable/big-shoulders-display": "^5.3.0",
+    "@fontsource-variable/big-shoulders-stencil-display": "^5.3.0",
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",
     "@fontsource-variable/instrument-sans": "^5.3.0",
     "@fontsource-variable/newsreader": "^5.3.0",
+    "@fontsource-variable/source-sans-3": "^5.3.1",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
     "@fontsource/instrument-serif": "^5.3.0",
     "astro": "^7.4.13",
     "sharp": "^0.35.5"

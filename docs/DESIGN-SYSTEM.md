@@ -1,5 +1,7 @@
 # Design system: Ceviche House
 
+> **Update 2026-11-19:** the shared "Tinta & Piedra" palette described below is **retired**. Each concept now has its own palette sampled from the restaurant's Instagram photos (A Mozo · B Casona · C Huarique · D Parte de Mar), and the tokens in `src/styles/tokens.css` are named after them. See [`PARTE-DE-MAR.md`](PARTE-DE-MAR.md) §3. The type, spacing, grid and component rules below still apply to A/B/C.
+
 **Tokens:** [`src/styles/tokens.css`](../src/styles/tokens.css). Each concept maps them to semantic roles (`--bg`, `--fg`, `--muted`, `--line`, `--accent`) at the top of its own stylesheet.
 
 ## 1. Positioning

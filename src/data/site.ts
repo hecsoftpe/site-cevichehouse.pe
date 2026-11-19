@@ -4,12 +4,12 @@
  * Anything not verified is `null` and the UI hides it. See docs/ASSETS.md.
  */
 export type Lang = 'es' | 'en';
-export type ConceptId = 'a' | 'b' | 'c';
+export type ConceptId = 'a' | 'b' | 'c' | 'd';
 
 /**
  * Which concept the owner picked for production.
  * `null` → `/` shows the design comparison page (current state).
- * Set to 'a' | 'b' | 'c' → that concept becomes indexable/canonical;
+ * Set to 'a' | 'b' | 'c' | 'd' → that concept becomes indexable/canonical;
  * see docs/CHOOSING-DEFAULT.md.
  */
 export const DEFAULT_CONCEPT: ConceptId | null = null;
@@ -51,6 +51,8 @@ export interface Location {
   /** Opening hours not verified → null hides them. Format: free text per lang. */
   hours: { es: string; en: string } | null;
   note: { es: string; en: string };
+  /** What the restaurant itself calls each house on Instagram. */
+  house: { es: string; en: string };
 }
 
 export const LOCATIONS: Location[] = [
@@ -63,9 +65,10 @@ export const LOCATIONS: Location[] = [
     mapsQuery: 'Ceviche House, Narciso de la Colina 184, Miraflores, Lima, Peru',
     hours: null,
     note: {
-      es: 'A pasos del corazón de Miraflores.',
-      en: 'Steps from the heart of Miraflores.',
+      es: 'Mesas en la vereda, bajo el toldo azul.',
+      en: 'Pavement tables under the blue awning.',
     },
+    house: { es: 'Huarique Miraflores', en: 'Huarique Miraflores' },
   },
   {
     id: 'barranco',
@@ -76,9 +79,10 @@ export const LOCATIONS: Location[] = [
     mapsQuery: 'Ceviche House, Jr. Zepita 203, Barranco, Lima, Peru',
     hours: null,
     note: {
-      es: 'En el barrio bohemio de Lima.',
-      en: "In Lima's bohemian quarter.",
+      es: 'Una casona con terraza frente al mar.',
+      en: 'A casona with a terrace facing the sea.',
     },
+    house: { es: 'Casona Barranco', en: 'Casona Barranco' },
   },
 ];
 

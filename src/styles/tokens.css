@@ -1,37 +1,61 @@
 /*
- * Ceviche House — brand core tokens ("Tinta & Piedra").
- * Shared by the three concepts; each concept maps these onto its own semantic
- * roles (--bg, --fg, --accent…). Rationale and contrast checks:
- * docs/DESIGN-SYSTEM.md.
+ * Ceviche House: colour tokens sampled from the restaurant's own photos
+ * (k-means + spot samples, see docs/PARTE-DE-MAR.md §3). Each concept takes
+ * its palette from one real place or object; no generic "warm ivory + terracotta".
+ *
+ *   A · Mozo     the black-and-white portrait of the floor staff + one rocoto red
+ *   B · Casona   the garnet walls, wrought-iron green and string lights of Barranco
+ *   C · Huarique the cobalt awning, steel counter and indigo booths of Miraflores
+ *   D · Parte    the apron, the shirt, rocoto and choclo: the day's slip
  */
 :root {
-  /* Ink: deep ocean blue-black, taken from the dark ceramic and table in the house photos */
-  --ink-950: #0b161c;
-  --ink-900: #0f1e26;
-  --ink-800: #17303b;
-  --ink-700: #24414d;
-  /* Ivory / stone: warm paper neutrals that let food colours lead */
-  --ivory-50: #f7f3ec;
-  --ivory-100: #f0e9dd;
-  --stone-200: #e0d7c8;
-  --stone-300: #cbbfab;
-  --stone-500: #8f8573;
-  --stone-700: #5e5649;
-  /* Olive: muted green from avocado / asparagus, used for quiet emphasis */
-  --olive-700: #4d5735;
-  --olive-500: #6f7a4e;
-  --olive-200: #c9ceb0;
-  /* Cobalt: the "azul cevichero" of the menu and the bowl rim, deepened for AA on ivory */
-  --cobalt-700: #1a5590;
-  --cobalt-500: #2f73b5;
-  --cobalt-200: #a9c8e6;
-  /* Ají / rocoto: the restrained warm accent */
-  --aji-700: #a13a23;
-  --aji-500: #c4502f;
-  --aji-200: #efb3a0;
-  /* Camote / limón: bright accents, only on ink backgrounds */
-  --camote-400: #e8944a;
-  --limon-300: #d5da7a;
+  /* A · Mozo */
+  --mozo-papel: #f6f6f3;      /* newsprint white, cool */
+  --mozo-papel-2: #ebebe7;
+  --mozo-gris: #dcdcd7;
+  --mozo-gris-2: #c9c9c3;
+  --mozo-tinta: #575757;
+  --mozo-negro: #121212;      /* the apron */
+  --mozo-negro-2: #1e1e1e;
+  --mozo-negro-3: #333333;
+  --mozo-rocoto: #c2321a;     /* text accent on papel */
+  --mozo-rocoto-500: #d23c1d; /* buttons */
+  --mozo-rocoto-200: #f29a80; /* accent on black */
+
+  /* B · Casona */
+  --casona-cal: #f6f1ec;        /* whitewashed plaster */
+  --casona-cal-2: #fbf8f5;
+  --casona-granate: #6e2230;    /* the wall in shade */
+  --casona-granate-2: #5a1b27;
+  --casona-granate-txt: #8a2c3b;
+  --casona-vino: #2a0e13;       /* text */
+  --casona-ambar: #f2b640;      /* string lights */
+  --casona-ambar-2: #f6c766;
+  --casona-rejeria: #1d2b27;    /* wrought-iron railing */
+  --casona-sombrilla: #e9d6b8;  /* umbrellas: decorative only */
+  --casona-mut: #5e4c4e;
+
+  /* C · Huarique */
+  --huarique-blanco: #f9f9f7;
+  --huarique-acero: #e1e4e6;    /* steel counter */
+  --huarique-acero-2: #cdd2d6;
+  --huarique-cobalto: #0b5bae;  /* the awning */
+  --huarique-cobalto-2: #094c91;
+  --huarique-celeste: #cfe0f5;
+  --huarique-indigo: #17162a;   /* the booths */
+  --huarique-mut: #55566a;
+  --huarique-lechuga: #4f7a2c;
+
+  /* D · Parte de mar */
+  --parte-papel: #f7f6f2;       /* the waiter's shirt */
+  --parte-papel-2: #ecebe5;
+  --parte-mandil: #111417;      /* the apron */
+  --parte-mandil-2: #1d2126;
+  --parte-rocoto: #e2501f;      /* blocks (dark text) */
+  --parte-rocoto-txt: #b33a17;  /* text on papel */
+  --parte-choclo: #efc13a;      /* blocks (dark text) */
+  --parte-toldo: #0a5cb0;       /* the awning, used sparingly */
+  --parte-mut: #55575a;
 
   /* Spacing (4px base) */
   --s-1: .25rem; --s-2: .5rem; --s-3: .75rem; --s-4: 1rem; --s-5: 1.5rem;
