@@ -1,0 +1,15 @@
+---
+/** Hand-drawn style fish mark, echoing the illustration used in the official menus. */
+interface Props { class?: string; size?: number }
+const { class: cls, size = 96 } = Astro.props;
+---
+<svg class={cls} width={size} height={size * 0.5} viewBox="0 0 120 60" aria-hidden="true" focusable="false"
+  fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10 30c14-17 46-24 74-14 8 3 14 8 20 14-6 6-12 11-20 14-28 10-60 3-74-14Z"/>
+  <path d="M10 30 2 17m8 13-8 13"/>
+  <path d="M104 30c-3 2-6 2-8 1"/>
+  <circle cx="92" cy="25" r="2.2"/>
+  <path d="M80 18c-4 8-4 16 0 24"/>
+  <path d="M38 22l8 16M50 19l8 20M62 18l8 22M26 26l6 10"/>
+  <path d="M52 15c4-6 12-9 18-8M54 45c3 4 8 6 13 6"/>
+</svg>

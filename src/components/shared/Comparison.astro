@@ -1,0 +1,184 @@
+---
+import '@fontsource-variable/fraunces';
+import '@fontsource-variable/inter';
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/space-grotesk';
+import '@fontsource/instrument-serif/400.css';
+import '@fontsource-variable/manrope';
+import Base from '../../layouts/Base.astro';
+import Icon from './Icon.astro';
+import Fish from './Fish.astro';
+import { CONCEPTS } from '../../data/concepts';
+import { type Lang, whatsappLink } from '../../data/site';
+import { conceptPath, url } from '../../i18n';
+
+interface Props { lang: Lang; path: string }
+const { lang, path } = Astro.props;
+const other: Lang = lang === 'es' ? 'en' : 'es';
+const L = lang === 'es'
+  ? {
+      title: 'Ceviche House — Propuestas de diseño',
+      kicker: 'Propuesta de sitio web · 3 conceptos',
+      h1: 'Tres maneras de contar Ceviche House.',
+      lead: 'Tres diseños completos con el mismo contenido real: carta oficial, dos locales, reservas por WhatsApp, reseñas, galería y versión en español e inglés. Explora cada uno en escritorio y móvil y elige el que será la página principal.',
+      open: 'Abrir sitio completo', desktop: 'Vista escritorio', mobile: 'Vista móvil', audience: 'Público', palette: 'Paleta', type: 'Tipografía',
+      choose: '¿Cómo elegir?',
+      chooseP: 'Indícanos el concepto elegido. Se publicará en la raíz del sitio con indexación en Google; las tres propuestas seguirán disponibles en /concept-a/, /concept-b/ y /concept-c/.',
+      same: 'Funciones comunes a los tres', features: ['Reserva por WhatsApp con mensaje pre-llenado', 'Carta completa con filtros + PDFs ES/EN', 'Platos destacados con precios reales', 'Dos locales con mapa bajo demanda', 'Reseñas Google y Tripadvisor por local', 'Galería con visor', 'Español / English', 'SEO local + datos estructurados'],
+      pending: 'Pendiente del restaurante: fotos del salón y platos, logo, horario, calificaciones verificadas e Instagram. Ver docs/ASSETS.md.',
+      lang: 'English',
+    }
+  : {
+      title: 'Ceviche House — Design proposals',
+      kicker: 'Website proposal · 3 concepts',
+      h1: 'Three ways to tell the Ceviche House story.',
+      lead: 'Three complete designs built on the same real content: official menu, two locations, WhatsApp booking, reviews, gallery and Spanish/English versions. Explore each on desktop and mobile, then pick the one that becomes the homepage.',
+      open: 'Open full site', desktop: 'Desktop view', mobile: 'Mobile view', audience: 'Audience', palette: 'Palette', type: 'Typography',
+      choose: 'How to choose',
+      chooseP: 'Tell us which concept you prefer. It will be published at the site root and indexed by Google; all three proposals remain available at /concept-a/, /concept-b/ and /concept-c/.',
+      same: 'Shared by all three', features: ['WhatsApp booking with pre-filled message', 'Full menu with filters + ES/EN PDFs', 'Signature dishes with real prices', 'Two locations with on-demand map', 'Google & Tripadvisor reviews per location', 'Gallery with lightbox', 'Español / English', 'Local SEO + structured data'],
+      pending: 'Pending from the restaurant: dining-room and dish photos, logo, opening hours, verified ratings and Instagram. See docs/ASSETS.md.',
+      lang: 'Español',
+    };
+const switchHref = url(other === 'en' ? `en/${path}` : path);
+const viewer = (id: string, device: string) => `${url('compare/')}?c=${id}&device=${device}&lang=${lang}`;
+---
+<Base lang={lang} path={path} title={L.title} bodyClass="cmp" indexable={false} jsonLd={false} themeColor="#101418">
+  <header class="cmp__hd">
+    <p class="cmp__brand"><Fish size={34} /> Ceviche House</p>
+    <a class="cmp__lang" href={switchHref} hreflang={other}>{L.lang}</a>
+  </header>
+  <main id="main">
+    <section class="cmp__intro">
+      <p class="cmp__k">{L.kicker}</p>
+      <h1>{L.h1}</h1>
+      <p class="cmp__lead">{L.lead}</p>
+      <nav class="cmp__jump" aria-label="Conceptos">
+        {CONCEPTS.map((c) => <a href={`#concept-${c.id}`}><b>{c.id.toUpperCase()}</b> {c.name}</a>)}
+      </nav>
+    </section>
+
+    {CONCEPTS.map((c, i) => (
+      <article class={`cc cc--${c.id}`} id={`concept-${c.id}`}>
+        <div class="cc__info">
+          <p class="cc__no">Concept {c.id.toUpperCase()} <span>0{i + 1} / 03</span></p>
+          <h2>{c.name}</h2>
+          <p class="cc__tag">{c.tagline[lang]}</p>
+          <p>{c.description[lang]}</p>
+          <dl>
+            <dt>{L.audience}</dt><dd>{c.audience[lang]}</dd>
+            <dt>{L.type}</dt>
+            <dd class="cc__type">
+              <span style={`font-family:${c.type.displayCss}`} class="cc__spec">{c.type.sample}</span>
+              <span>{c.type.display} + <span style={`font-family:${c.type.bodyCss}`}>{c.type.body}</span></span>
+            </dd>
+            <dt>{L.palette}</dt>
+            <dd class="cc__pal">{c.palette.map((p) => <span title={`${p.name} ${p.hex}`}><i style={`background:${p.hex}`}></i>{p.hex}</span>)}</dd>
+          </dl>
+          <div class="cc__btns">
+            <a class="cbtn cbtn--main" href={conceptPath(c.id, lang)}>{L.open}<Icon name="arrow" size={18} /></a>
+            <a class="cbtn" href={viewer(c.id, 'desktop')}>{L.desktop}</a>
+            <a class="cbtn" href={viewer(c.id, 'mobile')}>{L.mobile}</a>
+          </div>
+        </div>
+        <div class="cc__prev">
+          <a class="cc__desk" href={conceptPath(c.id, lang)} aria-label={`${L.open}: ${c.name}`}>
+            <span class="cc__chrome" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="cc__screen">
+              <iframe src={conceptPath(c.id, lang)} title={`${c.name} — preview`} loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe>
+            </span>
+          </a>
+          <a class="cc__mob" href={viewer(c.id, 'mobile')} aria-label={`${L.mobile}: ${c.name}`}>
+            <span class="cc__screen cc__screen--m">
+              <iframe src={conceptPath(c.id, lang)} title={`${c.name} — mobile preview`} loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe>
+            </span>
+          </a>
+        </div>
+      </article>
+    ))}
+
+    <section class="cmp__end">
+      <div>
+        <h2>{L.choose}</h2>
+        <p>{L.chooseP}</p>
+        <p class="cmp__pending">{L.pending}</p>
+      </div>
+      <div>
+        <h3>{L.same}</h3>
+        <ul>{L.features.map((f) => <li>{f}</li>)}</ul>
+      </div>
+    </section>
+  </main>
+  <script>
+    // Scale live iframe previews to their frame width.
+    const ro = new ResizeObserver((es) => es.forEach((e) => {
+      const el = e.target as HTMLElement;
+      const f = el.querySelector('iframe')!;
+      el.style.setProperty('--s', String(e.contentRect.width / f.offsetWidth));
+    }));
+    document.querySelectorAll('.cc__screen').forEach((el) => ro.observe(el));
+  </script>
+  <footer class="cmp__ft">
+    <p>Ceviche House · Miraflores & Barranco · Lima</p>
+    <a href={whatsappLink(lang)} target="_blank" rel="noopener">WhatsApp +51 998 400 543</a>
+  </footer>
+</Base>
+
+<style is:global>
+  .cmp { --bg: #101418; --panel: #171c22; --fg: #eef0f2; --mut: #a2abb5; --line: rgb(255 255 255 / .1); --acc: #4aa8e6;
+    background: var(--bg); color: var(--fg); font: 400 1rem/1.6 'Inter Variable', system-ui, sans-serif; }
+  .cmp__hd { max-width: 1400px; margin: auto; padding: 1.2rem clamp(1rem, 4vw, 3rem); display: flex; justify-content: space-between; align-items: center; }
+  .cmp__brand { display: flex; align-items: center; gap: .6rem; font: 500 1.3rem/1 'Fraunces Variable', serif; color: var(--fg); }
+  .cmp__brand svg { color: var(--acc); }
+  .cmp__lang { font-weight: 600; font-size: .9rem; padding: .6rem 1rem; border: 1px solid var(--line); border-radius: 999px; text-decoration: none; }
+  .cmp__intro { max-width: 1400px; margin: auto; padding: clamp(3rem, 8vw, 7rem) clamp(1rem, 4vw, 3rem) clamp(2rem, 5vw, 4rem); }
+  .cmp__k { font-weight: 600; font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; color: var(--acc); }
+  .cmp h1 { font: 330 clamp(2.6rem, 7vw, 6rem)/1 'Fraunces Variable', serif; letter-spacing: -.03em; margin: 1rem 0 1.5rem; max-width: 16ch; }
+  .cmp__lead { color: var(--mut); font-size: 1.12rem; max-width: 44rem; }
+  .cmp__jump { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 2rem; }
+  .cmp__jump a { text-decoration: none; padding: .7rem 1.1rem; border: 1px solid var(--line); border-radius: 999px; font-size: .92rem; }
+  .cmp__jump a:hover { border-color: var(--fg); }
+  .cmp__jump b { color: var(--acc); margin-right: .3rem; }
+
+  .cc { max-width: 1400px; margin: auto; padding: clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 3rem); border-top: 1px solid var(--line); display: grid; gap: 2.5rem; grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 1100px) { .cc { grid-template-columns: 5fr 7fr; align-items: center; gap: 4rem; } }
+  .cc__no { font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; color: var(--acc); }
+  .cc__no span { color: var(--mut); margin-left: .5rem; }
+  .cc h2 { font: 360 clamp(2.2rem, 4.5vw, 3.6rem)/1 'Fraunces Variable', serif; letter-spacing: -.02em; margin: .6rem 0 .4rem; }
+  .cc__tag { font: italic 400 1.2rem/1.4 'Fraunces Variable', serif; color: var(--mut); margin-bottom: 1rem; }
+  .cc__info > p { color: #cfd5db; }
+  .cc dl { display: grid; grid-template-columns: 7rem 1fr; gap: .9rem 1rem; margin: 1.6rem 0; padding-top: 1.4rem; border-top: 1px solid var(--line); font-size: .92rem; }
+  .cc dt { color: var(--mut); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; padding-top: .2rem; }
+  .cc__type { display: grid; gap: .2rem; }
+  .cc__spec { font-size: 1.7rem; line-height: 1.1; }
+  .cc__pal { display: flex; flex-wrap: wrap; gap: .7rem; }
+  .cc__pal span { display: inline-flex; align-items: center; gap: .35rem; font-size: .78rem; color: var(--mut); font-variant-numeric: tabular-nums; }
+  .cc__pal i { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgb(255 255 255 / .25); }
+  .cc__btns { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .cbtn { display: inline-flex; align-items: center; gap: .5rem; min-height: 46px; padding: .7rem 1.2rem; border-radius: 999px; border: 1px solid var(--line); text-decoration: none; font-weight: 600; font-size: .9rem; }
+  .cbtn:hover { border-color: var(--fg); }
+  .cbtn--main { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+
+  .cc__prev { position: relative; padding-bottom: 2rem; }
+  .cc__desk { display: block; border-radius: 12px; overflow: hidden; background: #000; box-shadow: 0 40px 80px -30px rgb(0 0 0 / .8); text-decoration: none; transition: transform .4s; }
+  .cc__desk:hover { transform: translateY(-4px); }
+  .cc__chrome { display: flex; gap: 6px; padding: 10px 12px; background: #23292f; }
+  .cc__chrome i { width: 10px; height: 10px; border-radius: 50%; background: #48525c; }
+  .cc__screen { display: block; position: relative; aspect-ratio: 16 / 10; overflow: hidden; }
+  .cc__screen iframe { position: absolute; top: 0; left: 0; width: 1440px; height: 900px; border: 0; transform-origin: 0 0; transform: scale(var(--s, .4)); pointer-events: none; }
+  .cc__mob { position: absolute; right: -0.5rem; bottom: 0; width: 26%; min-width: 110px; max-width: 200px; border-radius: 22px; border: 6px solid #000; overflow: hidden; background: #000; box-shadow: 0 30px 60px -20px rgb(0 0 0 / .9); transition: transform .4s; }
+  .cc__mob:hover { transform: translateY(-6px); }
+  .cc__screen--m { aspect-ratio: 390 / 844; }
+  .cc__screen--m iframe { width: 390px; height: 844px; }
+
+  .cmp__end { max-width: 1400px; margin: auto; padding: clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 3rem); border-top: 1px solid var(--line); display: grid; gap: 3rem; }
+  @media (min-width: 900px) { .cmp__end { grid-template-columns: 1fr 1fr; } }
+  .cmp__end h2 { font: 360 2.4rem/1.05 'Fraunces Variable', serif; margin-bottom: 1rem; }
+  .cmp__end p { color: #cfd5db; max-width: 36rem; }
+  .cmp__pending { margin-top: 1rem; padding: 1rem 1.2rem; border-left: 3px solid #f2b705; background: var(--panel); font-size: .92rem; }
+  .cmp__end h3 { font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--acc); margin-bottom: 1rem; }
+  .cmp__end ul { display: grid; gap: .1rem; }
+  .cmp__end li { padding: .7rem 0; border-bottom: 1px solid var(--line); }
+  .cmp__ft { max-width: 1400px; margin: auto; padding: 2rem clamp(1rem, 4vw, 3rem) 3rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; color: var(--mut); font-size: .9rem; border-top: 1px solid var(--line); }
+  .cmp__ft a { padding: .3rem 0; }
+</style>
