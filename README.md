@@ -7,9 +7,9 @@ The repository contains **three complete design alternatives** plus a comparison
 | Route | Contents |
 |---|---|
 | `/` · `/en/` | Comparison of the 3 concepts. Once one is chosen, this becomes that concept's homepage |
-| `/concept-a/` · `/en/concept-a/` | **A: Pacific Editorial**: editorial style, Fraunces serif, ivory/ocean/coral |
-| `/concept-b/` · `/en/concept-b/` | **B: Lima Vibrant**: XXL grotesque type, marine/coral/citrus, stickers and carousel |
-| `/concept-c/` · `/en/concept-c/` | **C: Minimal Contemporary**: 12-column grid, Instrument Serif, ivory/graphite/navy/sage |
+| `/concept-a/` · `/en/concept-a/` | **A: Pacific Editorial**: a magazine feature. Newsreader + Instrument Sans, ivory/ink/ají |
+| `/concept-b/` · `/en/concept-b/` | **B: Lima Vibrant**: barrio energy. Condensed Bricolage Grotesque, ink/camote, dish rail and sticky booking bar |
+| `/concept-c/` · `/en/concept-c/` | **C: Minimal Contemporary**: a numbered index on stone paper. Instrument Serif + Sans, ivory/stone/olive/ink |
 | `/concepts/` | Comparison (always available) |
 | `/compare/?c=a&device=mobile&lang=es` | Desktop / tablet / mobile preview in a device frame |
 
@@ -18,7 +18,8 @@ Every concept includes navigation with a mobile menu, a hero, our story, signatu
 ## Stack
 
 - [Astro](https://astro.build) as a static site, with TypeScript, no client-side framework and about 3 KB of JS.
-- Self-hosted fonts via `@fontsource`.
+- One brand core ("Tinta & Piedra") in `src/styles/tokens.css`, expressed three ways. See `docs/DESIGN-SYSTEM.md`.
+- Self-hosted fonts via `@fontsource` (Newsreader, Instrument Sans/Serif, Bricolage Grotesque), loading only the axes in use.
 - Images optimised to AVIF/WebP with `astro:assets`.
 - SEO: canonical, hreflang, Open Graph, JSON-LD (`Restaurant` ×2), sitemap and robots.
 
@@ -27,8 +28,10 @@ src/data/        business data, menu, reviews, gallery, concepts  ← edit conte
 src/i18n/        ES/EN copy and URL helpers
 src/components/  a/ b/ c/ (one per concept) + shared/
 src/layouts/     Base.astro (head, SEO, lightbox)
+src/styles/      tokens.css (brand core)
 src/scripts/     ui.ts (nav, reveal, filters, map, lightbox)
-docs/            ASSETS.md · CONTENT-NOTES.md · CHOOSING-DEFAULT.md
+scripts/         retouch.py (photo cleanup for printed/scanned sources)
+docs/            DESIGN-AUDIT · DESIGN-SYSTEM · PHOTO-ASSET-AUDIT · ASSETS · CONTENT-NOTES · CHOOSING-DEFAULT
 ```
 
 ## Development
@@ -53,4 +56,4 @@ The first time, enable it in **Settings → Pages → Source: GitHub Actions**. 
 
 ## Pending
 
-See [`docs/ASSETS.md`](docs/ASSETS.md): dining-room photos, logo, opening hours, verified ratings, Instagram. To choose the final design, see [`docs/CHOOSING-DEFAULT.md`](docs/CHOOSING-DEFAULT.md).
+See [`docs/ASSETS.md`](docs/ASSETS.md) and [`docs/PHOTO-ASSET-AUDIT.md`](docs/PHOTO-ASSET-AUDIT.md): high-resolution photos, logo, opening hours, verified ratings. To choose the final design, see [`docs/CHOOSING-DEFAULT.md`](docs/CHOOSING-DEFAULT.md).

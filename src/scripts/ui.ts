@@ -61,11 +61,19 @@ else {
 $$('[data-menu]').forEach((root) => {
   const tabs = $$<HTMLButtonElement>('[data-filter]', root);
   const groups = $$('[data-cat]', root);
-  tabs.forEach((t) => t.addEventListener('click', () => {
-    const id = t.dataset.filter!;
-    tabs.forEach((x) => x.setAttribute('aria-pressed', String(x === t)));
+  const select = (id: string) => {
+    tabs.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.filter === id)));
     groups.forEach((g) => (g.hidden = id !== 'all' && g.dataset.cat !== id));
+  };
+  tabs.forEach((t) => t.addEventListener('click', () => {
+    select(t.dataset.filter!);
+    // keep the chosen tab visible in a horizontally scrolling tab bar
+    t.scrollIntoView({ block: 'nearest', inline: 'center', behavior: reduce ? 'auto' : 'smooth' });
   }));
+  // On small screens open on one category instead of ~90 dishes at once.
+  // Without JS every category stays visible.
+  const def = root.dataset.menuDefault;
+  if (def && window.matchMedia('(max-width: 899px)').matches) select(def);
 });
 
 // --- Click-to-load Google Maps (privacy + performance) ---

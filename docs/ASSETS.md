@@ -4,33 +4,29 @@ The site is built from verified data only. Anything that couldn't be verified wh
 
 ## Photos
 
-| Slot | Where it shows | Status | File / location |
-|---|---|---|---|
-| Ceviche (hero) | Hero A/B/C, gallery, Open Graph | ✅ From the cover of the official menu PDF (`Carta_CH.pdf`) | `src/assets/photos/ceviche-carta.jpg` |
-| Seafood on a sizzling plate | Story A/C, hero B, gallery | ✅ From the last page of the official menu PDF | `src/assets/photos/mariscos-carta.jpg` |
-| Miraflores dining room | Gallery | ⏳ Placeholder | add `src/assets/photos/interior-miraflores.jpg` |
-| Barranco dining room | Gallery | ⏳ Placeholder | add `src/assets/photos/interior-barranco.jpg` |
-| Pisco sour | Gallery | ⏳ Placeholder | add `src/assets/photos/pisco.jpg` |
-| Table to share | Gallery | ⏳ Placeholder | add `src/assets/photos/mesa.jpg` |
-| Signature dishes (×9) | Dish cards | ⏳ Typographic cards on purpose | Only attach a photo once it is confirmed to show that exact dish |
+Full inventory, provenance, retouching and the shot list: [`PHOTO-ASSET-AUDIT.md`](PHOTO-ASSET-AUDIT.md).
 
-**To add a photo:** put the file in `src/assets/photos/`, import it in `src/data/gallery.ts` and replace `src: null` in its slot. Astro generates the AVIF/WebP versions automatically. Use high-resolution originals (≥ 2000 px wide). The two current photos only exist at 1080 px.
+| Asset | Status | File |
+|---|---|---|
+| Ceviche (hero) | ✅ From the menu PDF, retouched | `src/assets/photos/ceviche.jpg` |
+| Seafood on a sizzling plate | ✅ From the menu PDF, retouched | `src/assets/photos/mariscos.jpg` |
+| Detail crops (×2) | ✅ Derived, small frames only | `ceviche-detalle.jpg`, `mariscos-detalle.jpg` |
+| High-resolution originals (dishes, dining rooms, bar, pisco) | ⏳ Needed from the restaurant | Shot list in `PHOTO-ASSET-AUDIT.md` §5 |
 
-**Rules:**
-- Use only photos the restaurant owns: its own Instagram, TikTok and Facebook, or its photographer.
-- Do **not** download user-generated photos from Tripadvisor or Google.
-- No stock photos and no AI-generated food or interiors.
+The site never shows an empty photo slot: layouts are built for the photos that exist. **To add a photo:** put the original in `src/assets/photos/`, register it in `src/data/gallery.ts` and use it in the page components.
+
+**Rules:** only photos the restaurant owns (its own Instagram/TikTok/Facebook originals, or its photographer). Don't download guest photos from Tripadvisor or Google. No stock and no AI-generated food or interiors.
 
 ## Brand
 
 - **Logo:** not available. The site uses a text wordmark plus a fish drawn in the style of the menu illustration (`src/components/shared/Fish.astro`). Replace it with the official logo as SVG.
-- **Brand colours from the menu:** blue `#1482C5` (menu headings and the EN background), off-white paper `#E7E6E5`. All three concepts include this blue or one close to it.
+- **Brand colours from the menu:** blue `#1482C5` (menu headings and the EN background), off-white paper `#E7E6E5`. The redesign keeps it as `--cobalt-700` `#1a5590` (darkened for AA contrast). See `DESIGN-SYSTEM.md`.
 
 ## Business data
 
 | Data | Status | Where to change it |
 |---|---|---|
-| Instagram | ❌ Not verified: Linktree couldn't be read from the build environment | `SOCIAL.instagram` in `src/data/site.ts` (link appears automatically) |
+| Instagram | ✅ `@ceviche_house.pe` (confirmed by the client) | `SOCIAL.instagram` in `src/data/site.ts` |
 | Opening hours for each location | ❌ Not verified (shows "ask us on WhatsApp") | `LOCATIONS[].hours` in `src/data/site.ts` |
 | Google Maps rating and review count (Miraflores, Barranco) | ❌ No figures (button to read reviews only) | `REVIEWS[]` in `src/data/reviews.ts` (`rating`, `count`) |
 | Tripadvisor rating and review count (Miraflores) | ❌ No figures | same |

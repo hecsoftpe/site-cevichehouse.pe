@@ -30,8 +30,9 @@ export function whatsappLink(lang: Lang, location?: 'miraflores' | 'barranco'): 
 export const SOCIAL = {
   tiktok: 'https://www.tiktok.com/@cevichehouse.pe',
   facebook: 'https://www.facebook.com/cevichehouse',
-  /** Not verified yet (Linktree did not expose it). Fill in once confirmed. */
-  instagram: null as string | null,
+  /** Official account, confirmed by the owner's team. */
+  instagram: 'https://www.instagram.com/ceviche_house.pe/' as string | null,
+  instagramHandle: '@ceviche_house.pe',
   linktree: 'https://linktr.ee/Cevichehouse',
 };
 
