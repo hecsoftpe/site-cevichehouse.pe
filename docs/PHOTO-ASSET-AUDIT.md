@@ -14,6 +14,10 @@
 | TikTok / Facebook | Linked, but not used as an image source (video frames and recompressed images). |
 | Tripadvisor / Google Maps | **Not used.** Guest photos belong to the guests. |
 
+## 1b. Update 2026-11-19: Instagram photos
+
+With network access approved for this repository's environment, the **official public profile embed** (`instagram.com/ceviche_house.pe/embed/`) gave the **latest 6 of 35 posts** at 1080 px. The full profile redirects to login, which was not bypassed. They're in `src/assets/photos/ig/` and registered as `IG` in `src/data/gallery.ts`: `ceviche-pesca-del-dia` (the new hero), `mozos-bn`, `huarique-miraflores`, `terraza-barranco`, `casona-barranco` and `unico-review`. The analysis of each photo and how they're used are in [`PARTE-DE-MAR.md`](PARTE-DE-MAR.md) §1.2. **Guests are recognisable** in the huarique, terrace and casona shots: confirm consent before production.
+
 ## 2. Inventory
 
 | ID | Local path | Source | Subject | Original size | Quality | Rights | Placement | Ratio / crop |

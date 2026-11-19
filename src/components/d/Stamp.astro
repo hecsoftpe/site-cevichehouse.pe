@@ -1,0 +1,9 @@
+---
+/** Stencil crate stamp, e.g. "PESCA / DEL DÍA". Decorative: its words are
+ *  repeated elsewhere in readable text, so it is hidden from assistive tech. */
+interface Props { lines: readonly string[]; class?: string; tone?: 'rocoto' | 'mandil' | 'papel' }
+const { lines, class: cls, tone = 'rocoto' } = Astro.props;
+---
+<span class:list={['stamp', `stamp--${tone}`, cls]} aria-hidden="true">
+  {lines.map((l) => <span>{l}</span>)}
+</span>

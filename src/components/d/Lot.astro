@@ -1,0 +1,12 @@
+---
+/** A fresh-produce crate label for one dish: lot number, category, name,
+ *  description and price. Real menu data only (src/data/menu.ts). */
+interface Props { n: number; lotLabel: string; category: string; name: string; desc: string; price: string; tone?: 'plain' | 'choclo' | 'mandil'; wide?: boolean }
+const { n, lotLabel, category, name, desc, price, tone = 'plain', wide = false } = Astro.props;
+---
+<li class:list={['lot', `lot--${tone}`, { 'lot--wide': wide }]} data-reveal>
+  <p class="lot__head"><span>{lotLabel} {String(n).padStart(2, '0')}</span><span>{category}</span></p>
+  <h3 class="lot__name">{name}</h3>
+  <p class="lot__desc">{desc}</p>
+  <p class="lot__foot"><span class="lot__rule" aria-hidden="true"></span><span class="lot__price">{price}</span></p>
+</li>

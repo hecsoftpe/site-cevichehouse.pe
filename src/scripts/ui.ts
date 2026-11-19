@@ -103,3 +103,31 @@ if (dlg) {
     if (e.target === dlg || (e.target as HTMLElement).closest('[data-close]')) dlg.close();
   });
 }
+
+// --- Scroll-spy: mark the nav link of the section in view (aria-current) ---
+const spyLinks = $$<HTMLAnchorElement>('[data-spy]');
+if (spyLinks.length && 'IntersectionObserver' in window) {
+  const byId = new Map(spyLinks.map((a) => [a.dataset.spy!, a]));
+  const visible = new Map<string, number>();
+  const spy = new IntersectionObserver((es) => {
+    es.forEach((e) => visible.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0));
+    let best = '';
+    let max = 0;
+    visible.forEach((r, id) => { if (r > max) { max = r; best = id; } });
+    spyLinks.forEach((a) => a.removeAttribute('aria-current'));
+    if (best && byId.has(best)) byId.get(best)!.setAttribute('aria-current', 'true');
+  }, { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.25, 0.5, 1] });
+  byId.forEach((_a, id) => { const el = document.getElementById(id); if (el) spy.observe(el); });
+}
+
+// --- "Parte" strip: today's sheet number (day of the year) and date, Lima time ---
+$$('[data-parte-date]').forEach((el) => {
+  const lang = el.dataset.lang === 'en' ? 'en' : 'es';
+  const now = new Date();
+  const lima = new Date(now.toLocaleString('en-US', { timeZone: 'America/Lima' }));
+  const day = Math.floor((lima.getTime() - new Date(lima.getFullYear(), 0, 0).getTime()) / 86400000);
+  const date = new Intl.DateTimeFormat(lang === 'es' ? 'es-PE' : 'en-GB', {
+    weekday: 'short', day: '2-digit', month: '2-digit', year: '2-digit', timeZone: 'America/Lima',
+  }).format(now).replace(/,/g, '');
+  el.textContent = `${lang === 'es' ? 'Parte Nº' : 'Sheet No.'} ${String(day).padStart(3, '0')} · Lima · ${date}`;
+});

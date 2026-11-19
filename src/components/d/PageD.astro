@@ -1,0 +1,684 @@
+---
+/**
+ * Concept D — PARTE DE MAR.
+ * The house's daily sheet: what came in from the sea and went out to the
+ * table. Identity from the paperwork of fresh fish (lot labels, stencil
+ * stamps, tallies, technical callouts, contact sheets) set in Big Shoulders,
+ * Source Sans 3 and IBM Plex Mono, in flat colours sampled from the
+ * restaurant's own photos. See docs/PARTE-DE-MAR.md.
+ */
+import '@fontsource-variable/big-shoulders-display/wght';
+import '@fontsource-variable/big-shoulders-stencil-display/wght';
+import '@fontsource-variable/source-sans-3/wght';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../../styles/tokens.css';
+import Base from '../../layouts/Base.astro';
+import Icon from '../shared/Icon.astro';
+import Photo from '../shared/Photo.astro';
+import Stamp from './Stamp.astro';
+import Lot from './Lot.astro';
+import Annotated from './Annotated.astro';
+import { COPY } from './copy';
+import { type Lang, LOCATIONS, SOCIAL, MENU_PDF, PHONE_DISPLAY, PHONE_E164, whatsappLink, mapsDirections, mapsEmbed } from '../../data/site';
+import { MENU, priceOf, signatureItems } from '../../data/menu';
+import { P, IG } from '../../data/gallery';
+import { REVIEWS } from '../../data/reviews';
+import { t, url } from '../../i18n';
+
+interface Props { lang: Lang; path: string; indexable?: boolean; canonicalPath?: string }
+const { lang, path, indexable, canonicalPath } = Astro.props;
+const s = t(lang);
+const c = COPY[lang];
+const es = lang === 'es';
+const other: Lang = es ? 'en' : 'es';
+const switchHref = url(other === 'en' ? `en/${path}` : path);
+const wa = whatsappLink(lang);
+const dishes = signatureItems(lang);
+const name = (o: { es: string; en: string }) => o[lang];
+const nn = (i: number) => String(i).padStart(2, '0');
+const nav = [
+  ['cocina', c.nav.cocina], ['lotes', c.nav.lotes], ['carta', c.nav.carta],
+  ['casas', c.nav.casas], ['sala', c.nav.sala], ['reserva', c.nav.reserva],
+] as const;
+const mira = LOCATIONS[0], barr = LOCATIONS[1];
+const sheet = [IG.ceviche, IG.mozos, IG.casona, P.mariscos, IG.terraza, P.ceviche, IG.review, IG.huarique, P.mariscosDetalle, P.cevicheDetalle];
+const marked = new Set([0, 4]);
+const sigPrice = dishes[0].price;
+---
+<Base lang={lang} path={path} bodyClass="cD" indexable={indexable} canonicalPath={canonicalPath} themeColor="#f7f6f2">
+  <a class="skip" href="#main">{s.skip}</a>
+
+  <header class="hd" data-header>
+    <p class="strip">
+      <span data-parte-date data-lang={lang}>{c.parte} · {c.city}</span>
+      <span class="strip__r">{mira.house[lang]} · {barr.house[lang]}</span>
+    </p>
+    <div class="bar">
+      <a class="brand" href="#top" aria-label="Ceviche House">Ceviche&nbsp;House</a>
+      <nav class="nav" aria-label={es ? 'Principal' : 'Main'}>
+        {nav.map(([id, l], i) => <a href={`#${id}`} data-spy={id}><i>{nn(i + 1)}</i>{l}</a>)}
+      </nav>
+      <a class="lang" href={switchHref} hreflang={other} aria-label={s.switchLabel}>{other.toUpperCase()}</a>
+      <a class="btn btn--choclo bar__cta" href={wa} target="_blank" rel="noopener">{c.reserve}</a>
+      <button class="mbtn" type="button" data-nav-toggle aria-controls="d-menu" aria-expanded="false" aria-label={s.openMenu} data-label-open={s.openMenu} data-label-close={s.closeMenu}>
+        <span class="mbtn__o">{c.menu}</span><span class="mbtn__c">{c.close}</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="ov" id="d-menu">
+    <nav aria-label={es ? 'Móvil' : 'Mobile'}>
+      {nav.map(([id, l], i) => <a href={`#${id}`}><i>{nn(i + 1)}</i>{l}</a>)}
+    </nav>
+    <div class="ov__foot">
+      <a class="btn btn--choclo" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} />{s.reserveWa}</a>
+      <a class="ov__lang" href={switchHref} hreflang={other}>{s.switchTo}</a>
+    </div>
+  </div>
+
+  <main id="main">
+    <!-- 01 · HERO -->
+    <section class="hero" id="top">
+      <div class="hero__copy">
+        <h1 class="hero__title">
+          <span class="sr-only">Ceviche House — </span>
+          {c.hero.map((w, i) => <span class={`hero__w hero__w--${i}`}>{w}{' '}</span>)}
+        </h1>
+        <div class="hero__meta">
+          <p class="hero__lead">{c.heroLead}</p>
+          <div class="hero__cta">
+            <a class="btn btn--mandil" href="#carta">{c.heroCta}<Icon name="arrow" size={18} /></a>
+            <a class="btn btn--line" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} />{c.reserve}</a>
+          </div>
+          <dl class="ticket">
+            <div><dt>{dishes[0].name}</dt><dd>{sigPrice}</dd></div>
+            {LOCATIONS.map((l) => <div><dt>{l.house[lang]}</dt><dd>{l.street}</dd></div>)}
+          </dl>
+        </div>
+      </div>
+      <figure class="hero__fig">
+        <div class="hero__img"><Photo src={IG.ceviche.src} alt={IG.ceviche[lang]} eager sizes="(min-width: 1024px) 44vw, 100vw" position={IG.ceviche.focus} /></div>
+        <Stamp lines={c.stamp} class="hero__stamp" />
+        <figcaption><b>{c.fig}</b> {IG.ceviche[lang]}. <span>{SOCIAL.instagramHandle}</span></figcaption>
+      </figure>
+    </section>
+
+    <!-- 02 · COCINA -->
+    <section class="cocina" id="cocina" data-spy-target>
+      <div class="g">
+        <p class="k k--light" data-reveal>{c.cocinaK}</p>
+        <h2 class="cocina__title" data-reveal>{c.cocina.map((l, i) => <span class={`cocina__l cocina__l--${i}`}>{l}{' '}</span>)}</h2>
+        <p class="cocina__src" data-reveal>— {c.cocinaSrc}</p>
+        <div class="cocina__body" data-reveal>
+          <p>{s.storyP1}</p>
+          <p>{s.storyP2}</p>
+        </div>
+        <ol class="tally" data-reveal>
+          {s.pillars.map((p, i) => <li><span>{nn(i + 1)}</span><b>{p.t}</b><p>{p.d}</p></li>)}
+        </ol>
+      </div>
+    </section>
+
+    <!-- 03 · LOTES DEL DÍA -->
+    <section class="lotes" id="lotes" data-spy-target>
+      <div class="g">
+        <header class="lotes__head" data-reveal>
+          <p class="k">{c.lotesK}</p>
+          <h2 class="h2">{c.lotesTitle}</h2>
+          <p class="lotes__lead">{c.lotesLead}</p>
+        </header>
+        <div class="lotes__ann" data-reveal>
+          <Annotated
+            src={P.ceviche.src}
+            alt={P.ceviche[lang]}
+            sizes="(min-width: 1024px) 46vw, 100vw"
+            title={c.annotTitle}
+            note={c.annotNote}
+            points={[
+              { x: 30, y: 42, label: c.annot.camote, side: 'l' },
+              { x: 58, y: 47, label: c.annot.palta, side: 'l' },
+              { x: 62.5, y: 36.5, label: c.annot.alcaparras },
+              { x: 74, y: 44.5, label: c.annot.rocoto },
+              { x: 95.5, y: 76, label: c.annot.choclo, side: 'l' },
+            ]}
+          />
+        </div>
+        <ol class="lotes__list">
+          {dishes.map((d, i) => (
+            <Lot n={i + 1} lotLabel={c.lot} category={d.category} name={d.name} desc={d.desc} price={d.price}
+              tone={i === 0 ? 'choclo' : i === 6 ? 'mandil' : 'plain'} wide={i === 0 || i === 6 || i === 8} />
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <!-- 04 · CARTA -->
+    <section class="carta" id="carta" data-spy-target data-menu data-menu-default="ceviches">
+      <div class="g">
+        <header class="carta__head">
+          <p class="k">{c.cartaK}</p>
+          <h2 class="carta__title">{c.cartaTitle}</h2>
+          <p class="carta__pdf">
+            <a href={MENU_PDF[lang]} target="_blank" rel="noopener"><Icon name="doc" size={16} />{s.menuPdf}</a>
+            <a href={MENU_PDF[other]} target="_blank" rel="noopener" hreflang={other}><Icon name="doc" size={16} />{s.menuPdfOther}</a>
+          </p>
+        </header>
+        <div class="carta__idx">
+          <p class="carta__idxK">{c.index}</p>
+          <div class="carta__tabs" role="group" aria-label={s.fullMenuTitle}>
+            <button type="button" data-filter="all" aria-pressed="true"><i>00</i>{s.allCats}</button>
+            {MENU.map((cat, i) => <button type="button" data-filter={cat.id} aria-pressed="false"><i>{nn(i + 1)}</i>{name(cat)}<em>{cat.items.length}</em></button>)}
+          </div>
+        </div>
+        <div class="carta__cols">
+          {MENU.map((cat, i) => (
+            <section class="mcat" data-cat={cat.id} aria-labelledby={`d-cat-${cat.id}`}>
+              <h3 id={`d-cat-${cat.id}`}><i>{nn(i + 1)}</i>{name(cat)}</h3>
+              <ul>
+                {cat.items.map((it) => (
+                  <li>
+                    <span class="mcat__n">{name(it)}{(es ? it.subEs : it.subEn) && <small>{es ? it.subEs : it.subEn}</small>}</span>
+                    <span class="mcat__d" aria-hidden="true"></span>
+                    <span class="mcat__p">{priceOf(it, lang)}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+          <p class="carta__note">{s.menuNote}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 · CASAS -->
+    <section class="casas" id="casas" data-spy-target>
+      <div class="g">
+        <header class="casas__head" data-reveal>
+          <p class="k">{c.casasK}</p>
+          <h2 class="h2">{c.casasTitle}</h2>
+        </header>
+        <article class="casa casa--1">
+          <figure class="casa__fig casa__fig--wide" data-reveal>
+            <Photo src={IG.huarique.src} alt={IG.huarique[lang]} sizes="(min-width: 900px) 62vw, 100vw" position={IG.huarique.focus} />
+          </figure>
+          <div class="casa__txt" data-reveal>
+            <p class="casa__no">{c.casa} 01 · {mira.district}</p>
+            <h3 class="casa__name">{mira.house[lang]}</h3>
+            <p>{mira.note[lang]}</p>
+            <p class="casa__addr">{mira.street}</p>
+          </div>
+        </article>
+        <article class="casa casa--2">
+          <div class="casa__txt" data-reveal>
+            <p class="casa__no">{c.casa} 02 · {barr.district}</p>
+            <h3 class="casa__name">{barr.house[lang]}</h3>
+            <p>{barr.note[lang]}</p>
+            <p class="casa__addr">{barr.street}</p>
+          </div>
+          <figure class="casa__fig casa__fig--tall" data-reveal>
+            <Photo src={IG.casona.src} alt={IG.casona[lang]} sizes="(min-width: 900px) 40vw, 100vw" position={IG.casona.focus} />
+          </figure>
+          <figure class="casa__fig casa__fig--small" data-reveal>
+            <Photo src={IG.terraza.src} alt={IG.terraza[lang]} sizes="(min-width: 900px) 22vw, 60vw" position={IG.terraza.focus} />
+          </figure>
+        </article>
+      </div>
+    </section>
+
+    <!-- 06 · HOJA DE CONTACTOS -->
+    <section class="sheet" id="galeria">
+      <div class="g">
+        <header class="sheet__head" data-reveal>
+          <p class="k k--light">{c.galK}</p>
+          <h2 class="h2">{c.galTitle}</h2>
+          <p class="sheet__lead">{c.galLead}</p>
+        </header>
+        <ul class="sheet__grid">
+          {sheet.map((g, i) => (
+            <li class:list={['frame', { 'frame--mark': marked.has(i) }]} data-reveal>
+              <a href={g.src.src} data-lightbox data-alt={g[lang]}>
+                <Photo src={g.src} alt={g[lang]} sizes="(min-width: 900px) 18vw, 45vw" position={g.focus} widths={[300, 460, 640]} />
+              </a>
+              <span class="frame__no" aria-hidden="true">{nn(i + 1)}A ▸</span>
+            </li>
+          ))}
+        </ul>
+        {SOCIAL.instagram && (
+          <a class="sheet__ig" href={SOCIAL.instagram} target="_blank" rel="noopener"><Icon name="instagram" size={20} />{SOCIAL.instagramHandle}<Icon name="arrow" size={20} /></a>
+        )}
+      </div>
+    </section>
+
+    <!-- 07 · LA SALA -->
+    <section class="sala" id="sala" data-spy-target>
+      <div class="g">
+        <figure class="sala__fig" data-reveal>
+          <Photo src={IG.mozos.src} alt={IG.mozos[lang]} sizes="(min-width: 900px) 50vw, 100vw" position={IG.mozos.focus} />
+        </figure>
+        <div class="sala__txt" data-reveal>
+          <p class="k">{c.salaK}</p>
+          <h2 class="h2">{c.salaTitle}</h2>
+          <p class="sala__p">{s.storyP3}</p>
+          <blockquote class="sala__q">
+            <p>{c.salaQuote}</p>
+            <footer>{c.salaQuoteSrc}</footer>
+          </blockquote>
+          <p class="pending" role="note">{c.pending}</p>
+          <div class="sala__rev">
+            <p>{c.reviewsK}</p>
+            <ul>
+              {REVIEWS.map((r) => (
+                <li><a href={r.url} target="_blank" rel="noopener">{s.platform[r.platform]} · {LOCATIONS.find((l) => l.id === r.location)!.name}<Icon name="external" size={14} /></a></li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <figure class="sala__mini" data-reveal>
+          <Photo src={IG.review.src} alt={IG.review[lang]} sizes="(min-width: 900px) 16vw, 40vw" position={IG.review.focus} />
+        </figure>
+      </div>
+    </section>
+
+    <!-- 08 · UBICACIÓN Y CONTACTO -->
+    <section class="dest" id="contacto">
+      <div class="g">
+        {LOCATIONS.map((l, i) => (
+          <article class="label" data-reveal>
+            <header class="label__top"><span>{c.casa} {nn(i + 1)}</span><span>{l.district} · Lima</span></header>
+            <h3 class="label__name">{l.house[lang]}</h3>
+            <dl class="label__rows">
+              <div><dt>{c.casasDetail}</dt><dd>{l.street}</dd></div>
+              <div><dt>{c.district}</dt><dd>{l.district}, Lima</dd></div>
+              <div><dt>{c.hours}</dt><dd>{l.hours ? l.hours[lang] : s.hoursAsk}</dd></div>
+              <div><dt>{c.phone}</dt><dd><a href={`tel:${PHONE_E164}`}>{PHONE_DISPLAY}</a></dd></div>
+            </dl>
+            <div class="label__btns">
+              <a class="btn btn--mandil btn--sm" href={mapsDirections(l.mapsQuery)} target="_blank" rel="noopener"><Icon name="pin" size={16} />{s.directions}</a>
+              <a class="btn btn--line btn--sm" href={`tel:${PHONE_E164}`}><Icon name="phone" size={16} />{s.call}</a>
+            </div>
+            <div class="label__map">
+              <button type="button" data-map-load={mapsEmbed(l.mapsQuery, lang)} data-title={`${es ? 'Mapa' : 'Map'} — Ceviche House ${l.name}`}>
+                <span>{s.loadMap}</span><small>{s.mapPrivacy}</small>
+              </button>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- 09 · RESERVAS -->
+    <section class="reserva" id="reserva" data-spy-target>
+      <div class="g">
+        <p class="k k--mandil">{c.reservaK}</p>
+        <h2 class="reserva__title">{c.reservaTitle}</h2>
+        <p class="reserva__lead">{c.reservaLead}</p>
+        <ul class="reserva__go">
+          {LOCATIONS.map((l) => (
+            <li><a href={whatsappLink(lang, l.id)} target="_blank" rel="noopener">
+              <span>{c.reservaIn}</span><b>{l.house[lang]}</b><Icon name="arrow" size={40} />
+            </a></li>
+          ))}
+        </ul>
+        <p class="reserva__tel">WhatsApp · <a href={`tel:${PHONE_E164}`}>{PHONE_DISPLAY}</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ft">
+    <div class="g">
+      <p class="ft__word" aria-hidden="true">Ceviche House</p>
+      <div class="ft__cols">
+        {LOCATIONS.map((l) => <div><h3>{l.house[lang]}</h3><address>{l.street}<br />{l.district}, Lima</address></div>)}
+        <div>
+          <h3>{s.follow}</h3>
+          <ul>
+            {SOCIAL.instagram && <li><a href={SOCIAL.instagram} target="_blank" rel="noopener">Instagram</a></li>}
+            <li><a href={SOCIAL.tiktok} target="_blank" rel="noopener">TikTok</a></li>
+            <li><a href={SOCIAL.facebook} target="_blank" rel="noopener">Facebook</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>{s.menus}</h3>
+          <ul>
+            <li><a href={MENU_PDF.es} target="_blank" rel="noopener">Carta (ES)</a></li>
+            <li><a href={MENU_PDF.en} target="_blank" rel="noopener">Menu (EN)</a></li>
+            <li><a href={switchHref} hreflang={other}>{s.switchTo}</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="ft__legal"><span>{c.fin}</span><span>© {new Date().getFullYear()} Ceviche House · Lima, Perú. {s.rights}</span></p>
+    </div>
+  </footer>
+
+  <aside class="mbar" aria-label={s.reserveWa}>
+    <a class="btn btn--choclo" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} />{c.reserve}</a>
+    <a class="btn btn--ghost" href="#carta">{c.nav.carta}</a>
+  </aside>
+</Base>
+
+<style is:global>
+  .cD {
+    --bg: var(--parte-papel); --fg: var(--parte-mandil); --mut: var(--parte-mut); --line: rgb(17 20 23 / .22);
+    --disp: 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif;
+    --sten: 'Big Shoulders Stencil Display Variable', 'Big Shoulders Display Variable', sans-serif;
+    --sans: 'Source Sans 3 Variable', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    background: var(--bg); color: var(--fg); font: 400 1.0625rem/1.55 var(--sans);
+  }
+  .cD ::selection { background: var(--parte-choclo); color: var(--parte-mandil); }
+  .cD :focus-visible { outline: 3px solid var(--parte-toldo); outline-offset: 3px; }
+  .cD .g { max-width: var(--max); margin: auto; padding-inline: var(--gut); display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  @media (min-width: 900px) { .cD .g { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.25rem; } }
+  .cD i { font-style: normal; }
+  .cD section[id] { scroll-margin-top: 6.2rem; }
+  .cD .k { font: 500 .74rem/1.3 var(--mono); letter-spacing: .02em; text-transform: uppercase; color: var(--parte-rocoto-txt); display: flex; align-items: center; gap: .6rem; }
+  .cD .k::before { content: ''; width: 1.6rem; height: 2px; background: currentColor; }
+  .cD .k--light { color: var(--parte-choclo); }
+  .cD .k--mandil { color: var(--parte-mandil); }
+  .cD .h2 { font: 800 clamp(2.8rem, 6.4vw, 5.6rem)/.86 var(--disp); text-transform: uppercase; letter-spacing: -.005em; text-wrap: balance; }
+
+  /* Buttons: square, flat, typographic */
+  .cD .btn { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 48px; padding: .7rem 1.2rem; border: 2px solid transparent; border-radius: 0; font: 500 .82rem/1 var(--mono); text-transform: uppercase; letter-spacing: .02em; text-decoration: none; transition: background var(--dur), color var(--dur), border-color var(--dur); }
+  .cD .btn svg { transition: transform var(--dur) var(--ease); }
+  .cD .btn:hover svg { transform: translateX(3px); }
+  .cD .btn--sm { min-height: 44px; padding: .55rem .9rem; font-size: .76rem; }
+  .cD .btn--mandil { background: var(--parte-mandil); color: var(--parte-papel); }
+  .cD .btn--mandil:hover { background: var(--parte-rocoto); color: var(--parte-mandil); }
+  .cD .btn--choclo { background: var(--parte-choclo); color: var(--parte-mandil); }
+  .cD .btn--choclo:hover { background: var(--parte-papel); }
+  .cD .btn--line { border-color: var(--parte-mandil); color: var(--parte-mandil); }
+  .cD .btn--line:hover { background: var(--parte-mandil); color: var(--parte-papel); }
+  .cD .btn--ghost { border-color: rgb(247 246 242 / .35); color: var(--parte-papel); }
+
+  /* Header */
+  .cD .hd { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 2px solid var(--fg); }
+  .cD .strip { display: flex; justify-content: space-between; gap: 1rem; padding: .35rem var(--gut); background: var(--parte-mandil); color: var(--parte-papel); font: 400 .7rem/1.3 var(--mono); text-transform: uppercase; letter-spacing: .03em; }
+  .cD .strip__r { display: none; }
+  @media (min-width: 700px) { .cD .strip__r { display: inline; color: var(--parte-choclo); } }
+  .cD .bar { max-width: none; padding: .45rem var(--gut); display: flex; align-items: center; gap: 1rem; }
+  .cD .brand { font: 900 1.7rem/1 var(--disp); text-transform: uppercase; text-decoration: none; letter-spacing: .005em; margin-right: auto; white-space: nowrap; }
+  .cD .nav { display: none; gap: .2rem; }
+  .cD .nav a { display: flex; align-items: baseline; gap: .3rem; padding: .7rem .6rem; font: 500 .76rem/1 var(--mono); text-transform: uppercase; text-decoration: none; border-bottom: 3px solid transparent; transition: border-color var(--dur), color var(--dur); }
+  .cD .nav a i { color: var(--mut); font-size: .68rem; }
+  .cD .nav a:hover { border-color: var(--line); }
+  .cD .nav a[aria-current='true'] { border-color: var(--parte-rocoto); }
+  .cD .nav a[aria-current='true'] i { color: var(--parte-rocoto-txt); }
+  .cD .lang { font: 500 .76rem/1 var(--mono); padding: .9rem .4rem; text-decoration: none; }
+  .cD .bar__cta { display: none; min-height: 42px; }
+  .cD .mbtn { min-height: 44px; padding: 0 .9rem; border: 2px solid var(--fg); background: transparent; font: 500 .78rem/1 var(--mono); text-transform: uppercase; }
+  .cD .mbtn__c, .cD .mbtn[aria-expanded='true'] .mbtn__o { display: none; }
+  .cD .mbtn[aria-expanded='true'] .mbtn__c { display: inline; }
+  @media (min-width: 1100px) { .cD .nav, .cD .bar__cta { display: flex; } .cD .mbtn { display: none; } }
+
+  .cD .ov { position: fixed; inset: 0; z-index: 45; padding: 7.5rem var(--gut) 2rem; background: var(--parte-mandil); color: var(--parte-papel); display: flex; flex-direction: column; justify-content: space-between; visibility: hidden; opacity: 0; transition: opacity .3s, visibility .3s; }
+  .cD .ov[data-open] { visibility: visible; opacity: 1; }
+  .cD .ov nav { display: grid; }
+  .cD .ov nav a { display: flex; align-items: baseline; gap: 1rem; font: 800 clamp(2.4rem, 11vw, 3.6rem)/1.05 var(--disp); text-transform: uppercase; text-decoration: none; padding: .25rem 0; border-bottom: 1px solid rgb(247 246 242 / .15); }
+  .cD .ov nav i { font: 500 .8rem/1 var(--mono); color: var(--parte-choclo); }
+  .cD .ov__foot { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; }
+  .cD .ov__lang { font: 500 .85rem/1 var(--mono); padding: .8rem 0; }
+  html[data-nav-open] .cD .mbar { display: none; }
+
+  /* 01 · Hero */
+  .cD .hero { display: grid; grid-template-columns: minmax(0, 1fr); border-bottom: 2px solid var(--fg); }
+  .cD .hero__copy { padding: 1.4rem var(--gut) 2rem; display: grid; gap: 1.5rem; }
+  .cD .hero__title { font: 900 clamp(5.2rem, 31vw, 19rem)/.76 var(--disp); text-transform: uppercase; letter-spacing: -.01em; display: grid; }
+  .cD .hero__w--2 { color: var(--parte-rocoto); }
+  .cD .hero__lead { font-size: 1.15rem; line-height: 1.45; max-width: 30rem; }
+  .cD .hero__cta { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.4rem; }
+  .cD .ticket { margin-top: 1.8rem; border-top: 2px solid var(--fg); font: 400 .78rem/1.35 var(--mono); }
+  .cD .ticket div { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem 0; border-bottom: 1px dashed var(--line); }
+  .cD .ticket dt { text-transform: uppercase; }
+  .cD .ticket dd { margin: 0; color: var(--mut); text-align: right; }
+  .cD .hero__fig { position: relative; }
+  @media (max-width: 1023px) {
+    .cD .hero__copy { display: contents; }
+    .cD .hero__title { order: 1; padding: 1.1rem var(--gut) 1.2rem; }
+    .cD .hero__fig { order: 2; }
+    .cD .hero__meta { order: 3; padding: 1.6rem var(--gut) 2.2rem; }
+  }
+  .cD .hero__img { aspect-ratio: 4 / 5; overflow: hidden; background: var(--parte-mandil); }
+  .cD .hero__fig figcaption { font: 400 .7rem/1.4 var(--mono); padding: .5rem var(--gut); color: var(--mut); border-top: 2px solid var(--fg); }
+  .cD .hero__fig figcaption b { font-weight: 500; color: var(--fg); margin-right: .3rem; }
+  .cD .hero__fig figcaption span { color: var(--parte-rocoto-txt); }
+  .cD .hero__stamp { position: absolute; right: var(--gut); top: 1.2rem; }
+  @media (min-width: 1024px) {
+    .cD .hero { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); min-height: calc(100svh - 5.5rem); }
+    .cD .hero__copy { padding: 2.5rem 2rem 2.5rem max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut))); align-content: space-between; border-right: 2px solid var(--fg); }
+    .cD .hero__title { font-size: clamp(9rem, 15.5vw, 19rem); }
+    .cD .hero__meta { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: end; }
+    .cD .ticket { margin-top: 0; }
+    .cD .hero__fig { order: 0; display: grid; grid-template-rows: 1fr auto; }
+    .cD .hero__img { aspect-ratio: auto; height: 100%; }
+    .cD .hero__fig figcaption { padding-inline: 1rem; }
+    .cD .hero__stamp { left: -4.2rem; right: auto; top: auto; bottom: 5rem; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .cD .hero__w { animation: dRise .9s var(--ease) both; }
+    .cD .hero__w--1 { animation-delay: .08s; } .cD .hero__w--2 { animation-delay: .16s; }
+    @keyframes dRise { from { transform: translateY(.18em); opacity: 0; } to { transform: none; opacity: 1; } }
+  }
+
+  /* Stamp */
+  .cD .stamp { display: inline-grid; padding: .45rem .7rem .35rem; border: 3px solid currentColor; font: 800 clamp(1.4rem, 2.6vw, 2.1rem)/.86 var(--sten); text-transform: uppercase; letter-spacing: .02em; transform: rotate(-6deg); background: var(--parte-papel); }
+  .cD .stamp--rocoto { color: var(--parte-rocoto-txt); }
+  .cD .stamp--mandil { color: var(--parte-mandil); }
+
+  /* 02 · Cocina */
+  .cD .cocina { background: var(--parte-mandil); color: var(--parte-papel); padding: var(--section) 0; }
+  .cD .cocina__title { font: 900 clamp(3.4rem, 11vw, 10.5rem)/.82 var(--disp); text-transform: uppercase; display: grid; margin-top: .5rem; }
+  .cD .cocina__l--1 { padding-left: .9em; }
+  .cD .cocina__l--2 { color: var(--parte-choclo); }
+  .cD .cocina__src { font: 400 .78rem/1.4 var(--mono); color: rgb(247 246 242 / .65); }
+  .cD .cocina__body { display: grid; gap: 1rem; color: rgb(247 246 242 / .82); max-width: 34rem; }
+  .cD .tally { counter-reset: t; border-top: 2px solid var(--parte-papel); background: repeating-linear-gradient(90deg, rgb(247 246 242 / .35) 0 1px, transparent 1px 12px) top / 100% 8px no-repeat; padding-top: 1rem; }
+  .cD .tally li { display: grid; grid-template-columns: 2.4rem 1fr; gap: .2rem .8rem; padding: .9rem 0; border-bottom: 1px solid rgb(247 246 242 / .18); }
+  .cD .tally span { grid-row: span 2; font: 500 .78rem/1.6 var(--mono); color: var(--parte-choclo); }
+  .cD .tally b { font: 800 1.6rem/1 var(--disp); text-transform: uppercase; }
+  .cD .tally p { color: rgb(247 246 242 / .72); font-size: .95rem; }
+  @media (min-width: 900px) {
+    .cD .cocina .k { grid-column: 1 / -1; }
+    .cD .cocina__title { grid-column: 1 / 10; }
+    .cD .cocina__src { grid-column: 1 / 6; }
+    .cD .cocina__body { grid-column: 1 / 6; margin-top: 2rem; }
+    .cD .tally { grid-column: 8 / 13; grid-row: 4 / 6; align-self: end; }
+  }
+
+  /* 03 · Lotes */
+  .cD .lotes { padding: var(--section) 0; }
+  .cD .lotes__head { display: grid; gap: 1rem; align-content: start; }
+  .cD .lotes__lead { color: var(--mut); max-width: 24rem; }
+  .cD .lotes__list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; border-top: 2px solid var(--fg); }
+  @media (min-width: 640px) { .cD .lotes__list { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cD .lot--wide { grid-column: 1 / -1; } }
+  @media (min-width: 900px) {
+    .cD .lotes__head { grid-column: 1 / 5; grid-row: 1; position: sticky; top: 7rem; align-self: start; }
+    .cD .lotes__ann { grid-column: 6 / 13; grid-row: 1; }
+    .cD .lotes__list { grid-column: 1 / 13; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 3rem; }
+    .cD .lot--wide { grid-column: span 2; }
+  }
+  .cD .lot { position: relative; display: flex; flex-direction: column; gap: .55rem; padding: 1.1rem 1.1rem 1rem; border-bottom: 2px solid var(--fg); border-right: 2px solid var(--fg); min-height: 15rem; transition: background var(--dur); }
+  .cD .lot:nth-child(odd) { border-left: 2px solid var(--fg); }
+  @media (min-width: 640px) { .cD .lot:nth-child(odd) { border-left: 0; } .cD .lotes__list { border-left: 2px solid var(--fg); } }
+  .cD .lot__head { display: flex; justify-content: space-between; gap: 1rem; font: 500 .7rem/1.3 var(--mono); text-transform: uppercase; padding-bottom: .5rem; border-bottom: 1px solid currentColor; }
+  .cD .lot__name { font: 800 clamp(1.9rem, 3vw, 2.6rem)/.9 var(--disp); text-transform: uppercase; }
+  .cD .lot--wide .lot__name { font-size: clamp(2.4rem, 5vw, 4.2rem); }
+  .cD .lot__desc { font-size: .95rem; color: var(--mut); max-width: 30rem; }
+  .cD .lot__foot { margin-top: auto; display: flex; align-items: center; gap: .8rem; padding-top: .6rem; }
+  .cD .lot__rule { flex: 0 0 2.2rem; height: 2px; background: currentColor; transition: flex-basis .45s var(--ease); }
+  .cD .lot:hover .lot__rule { flex-basis: calc(100% - 6rem); }
+  .cD .lot__price { font: 500 1.05rem/1 var(--mono); white-space: nowrap; }
+  .cD .lot--choclo { background: var(--parte-choclo); }
+  .cD .lot--choclo .lot__desc { color: var(--parte-mandil); }
+  .cD .lot--mandil { background: var(--parte-mandil); color: var(--parte-papel); }
+  .cD .lot--mandil .lot__desc { color: rgb(247 246 242 / .75); }
+  .cD .lot--plain:hover { background: var(--parte-papel-2); }
+
+  /* Annotated photo */
+  .cD .ann__frame { position: relative; overflow: hidden; background: var(--parte-mandil); }
+  .cD .ann__frame picture, .cD .ann__frame img { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .cD .ann__pt { position: absolute; display: flex; align-items: center; transform: translate(-50%, -50%); }
+  .cD .ann__pt i { display: grid; place-content: center; width: 1.55rem; height: 1.55rem; border-radius: 50%; background: var(--parte-papel); color: var(--parte-mandil); font: 500 .7rem/1 var(--mono); box-shadow: 0 0 0 2px var(--parte-mandil); }
+  .cD .ann__pt b { display: none; }
+  .cD .ann__cap { display: grid; gap: .5rem; padding-top: .8rem; font: 400 .74rem/1.4 var(--mono); text-transform: uppercase; }
+  .cD .ann__t { font-weight: 500; }
+  .cD .ann__cap ol { display: flex; flex-wrap: wrap; gap: .2rem 1.1rem; counter-reset: a; }
+  .cD .ann__cap li { counter-increment: a; }
+  .cD .ann__cap li::before { content: counter(a) ' · '; color: var(--parte-rocoto-txt); }
+  .cD .ann__n { color: var(--mut); text-transform: none; }
+  @media (min-width: 900px) {
+    .cD .ann__pt b { display: block; position: absolute; top: 50%; white-space: nowrap; font: 500 .72rem/1 var(--mono); text-transform: uppercase; background: var(--parte-papel); padding: .35rem .5rem; transform: translateY(-50%); }
+    .cD .ann__pt--r b { left: calc(100% + 2.4rem); }
+    .cD .ann__pt--l b { right: calc(100% + 2.4rem); }
+    .cD .ann__pt::after { content: ''; position: absolute; top: 50%; height: 1.5px; width: 2.4rem; background: var(--parte-papel); }
+    .cD .ann__pt--r::after { left: 100%; }
+    .cD .ann__pt--l::after { right: 100%; }
+    .cD .ann__cap ol { display: none; }
+  }
+
+  /* 04 · Carta */
+  .cD .carta { background: var(--parte-choclo); padding: var(--section) 0; border-block: 2px solid var(--fg); }
+  .cD .carta .k { color: var(--parte-mandil); }
+  .cD .carta__head { display: grid; gap: 1rem; }
+  .cD .carta__title { font: 900 clamp(4.6rem, 17vw, 15rem)/.78 var(--sten); text-transform: uppercase; letter-spacing: -.01em; }
+  .cD .carta__pdf { display: flex; flex-wrap: wrap; gap: .2rem 1.4rem; }
+  .cD .carta__pdf a { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; font: 500 .78rem/1 var(--mono); text-transform: uppercase; text-underline-offset: 4px; }
+  .cD .carta__idxK { display: none; font: 500 .72rem/1 var(--mono); text-transform: uppercase; padding-bottom: .6rem; border-bottom: 2px solid var(--fg); }
+  .cD .carta__tabs { display: flex; gap: .3rem; overflow-x: auto; scrollbar-width: none; margin-inline: calc(-1 * var(--gut)); padding: .6rem var(--gut); position: sticky; top: 5.6rem; z-index: 3; background: var(--parte-choclo); border-block: 2px solid var(--fg); }
+  .cD .carta__tabs button { flex: none; display: flex; align-items: baseline; gap: .4rem; min-height: 44px; padding: .5rem .75rem; border: 2px solid transparent; background: none; font: 500 .8rem/1.15 var(--mono); text-transform: uppercase; text-align: left; color: var(--parte-mandil); }
+  .cD .carta__tabs button i { font-size: .68rem; }
+  .cD .carta__tabs button em { font-style: normal; font-size: .68rem; opacity: .7; }
+  .cD .carta__tabs button:hover { border-color: var(--parte-mandil); }
+  .cD .carta__tabs button[aria-pressed='true'] { background: var(--parte-mandil); color: var(--parte-choclo); }
+  .cD .mcat { break-inside: avoid; margin-bottom: 2.4rem; }
+  .cD .mcat h3 { display: flex; align-items: baseline; gap: .6rem; font: 800 2.1rem/.95 var(--disp); text-transform: uppercase; padding-bottom: .5rem; border-bottom: 2px solid var(--fg); }
+  .cD .mcat h3 i { font: 500 .72rem/1 var(--mono); }
+  .cD .mcat li { display: flex; align-items: baseline; gap: .5rem; padding: .45rem 0; border-bottom: 1px solid rgb(17 20 23 / .25); font-size: 1rem; }
+  .cD .mcat small { display: block; font-size: .85rem; opacity: .8; }
+  .cD .mcat__d { flex: 1; min-width: .8rem; border-bottom: 1.5px dotted rgb(17 20 23 / .45); transform: translateY(-.25em); }
+  .cD .mcat__p { font: 500 .95rem/1 var(--mono); white-space: nowrap; }
+  .cD .carta__note { font: 400 .74rem/1.4 var(--mono); text-transform: uppercase; }
+  @media (min-width: 900px) {
+    .cD .carta__head { grid-column: 1 / 13; grid-template-columns: 1fr auto; align-items: end; margin-bottom: 2.5rem; }
+    .cD .carta__head .k { grid-column: 1 / -1; }
+    .cD .carta__idx { grid-column: 1 / 4; position: sticky; top: 7.5rem; align-self: start; }
+    .cD .carta__idxK { display: block; }
+    .cD .carta__tabs { flex-direction: column; gap: 0; position: static; margin: 0; padding: 0; border: 0; overflow: visible; background: none; }
+    .cD .carta__tabs button { width: 100%; min-height: 40px; padding: .5rem .5rem; border: 0; border-bottom: 1px solid rgb(17 20 23 / .25); }
+    .cD .carta__tabs button em { margin-left: auto; }
+    .cD .carta__cols { grid-column: 4 / 13; columns: 2; column-gap: 3rem; }
+  }
+
+  /* 05 · Casas */
+  .cD .casas { padding: var(--section) 0; }
+  .cD .casas__head { display: grid; gap: 1rem; margin-bottom: 1rem; }
+  .cD .casa { display: grid; gap: 1.2rem; grid-column: 1 / -1; padding: 2rem 0; border-top: 2px solid var(--fg); }
+  .cD .casa__fig { overflow: hidden; background: var(--parte-mandil); }
+  .cD .casa__fig--wide { aspect-ratio: 1080 / 571; }
+  .cD .casa__fig--tall { aspect-ratio: 4 / 5; }
+  .cD .casa__fig--small { aspect-ratio: 4 / 5; width: 60%; justify-self: end; margin-top: -30%; border: 6px solid var(--bg); }
+  .cD .casa__no { font: 500 .74rem/1 var(--mono); text-transform: uppercase; color: var(--parte-rocoto-txt); }
+  .cD .casa__name { font: 900 clamp(3rem, 13vw, 7.2rem)/.84 var(--disp); text-transform: uppercase; margin: .6rem 0 .8rem; overflow-wrap: anywhere; }
+  .cD .casa--1 .casa__name { color: var(--parte-toldo); }
+  @media (min-width: 900px) { .cD .casa__name { font-size: clamp(3rem, 4.6vw, 5.4rem); } .cD .casa--2 .casa__name { font-size: clamp(3rem, 5.6vw, 6.4rem); } }
+  .cD .casa__txt > p:not(.casa__no) { font-size: 1.1rem; max-width: 24rem; }
+  .cD .casa__addr { font: 400 .82rem/1.4 var(--mono) !important; text-transform: uppercase; margin-top: .6rem; padding-top: .6rem; border-top: 1px dashed var(--line); }
+  @media (min-width: 900px) {
+    .cD .casas__head { grid-column: 1 / 13; }
+    .cD .casa { grid-template-columns: subgrid; column-gap: 1.25rem; align-items: end; }
+    .cD .casa--1 .casa__fig--wide { grid-column: 1 / 9; }
+    .cD .casa--1 .casa__txt { grid-column: 9 / 13; }
+    .cD .casa--2 .casa__txt { grid-column: 1 / 5; grid-row: 1; align-self: start; }
+    .cD .casa--2 .casa__fig--tall { grid-column: 7 / 13; grid-row: 1 / 3; }
+    .cD .casa--2 .casa__fig--small { grid-column: 3 / 7; grid-row: 2; width: 100%; margin: 0 -2.5rem -2rem 0; z-index: 1; position: relative; }
+  }
+
+  /* 06 · Contact sheet */
+  .cD .sheet { background: var(--parte-mandil); color: var(--parte-papel); padding: var(--section) 0; }
+  .cD .sheet__head { display: grid; gap: 1rem; }
+  .cD .sheet__lead { color: rgb(247 246 242 / .72); max-width: 30rem; }
+  .cD .sheet__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem .8rem; padding: 1.2rem .8rem; background: var(--parte-mandil-2); border: 1px solid rgb(247 246 242 / .18); }
+  @media (min-width: 640px) { .cD .sheet__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 900px) { .cD .sheet__head { grid-column: 1 / 13; grid-template-columns: 1fr 1fr; align-items: end; } .cD .sheet__head .k { grid-column: 1 / -1; } .cD .sheet__grid { grid-column: 1 / 13; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2rem 1rem; padding: 1.6rem 1.2rem; } }
+  .cD .frame { position: relative; }
+  .cD .frame a { display: block; aspect-ratio: 1; overflow: hidden; filter: saturate(.92); transition: filter var(--dur); }
+  .cD .frame a:hover { filter: none; }
+  .cD .frame img { transition: transform .8s var(--ease); }
+  .cD .frame a:hover img { transform: scale(1.04); }
+  .cD .frame__no { display: block; margin-top: .4rem; font: 400 .68rem/1 var(--mono); color: var(--parte-choclo); }
+  .cD .frame--mark a { outline: 3px solid var(--parte-rocoto); outline-offset: 5px; }
+  .cD .frame--mark::after { content: '✓'; position: absolute; top: -.9rem; right: -.5rem; font: 800 1.6rem/1 var(--disp); color: var(--parte-rocoto); }
+  .cD .sheet__ig { grid-column: 1 / -1; justify-self: start; display: inline-flex; align-items: center; gap: .6rem; min-height: 48px; font: 800 clamp(1.8rem, 4vw, 3rem)/1 var(--disp); text-transform: uppercase; text-decoration: none; border-bottom: 3px solid var(--parte-choclo); }
+  .cD .sheet__ig:hover { color: var(--parte-choclo); }
+
+  /* 07 · La sala */
+  .cD .sala { padding: var(--section) 0; }
+  .cD .sala__fig { aspect-ratio: 4 / 5; overflow: hidden; }
+  .cD .sala__txt { display: grid; gap: 1.2rem; align-content: start; }
+  .cD .sala__p { font-size: 1.15rem; max-width: 30rem; }
+  .cD .sala__q { border-top: 2px solid var(--fg); border-bottom: 2px solid var(--fg); padding: 1.1rem 0; }
+  .cD .sala__q p { font: 900 clamp(2.2rem, 4.4vw, 3.6rem)/.9 var(--disp); text-transform: uppercase; color: var(--parte-rocoto-txt); }
+  .cD .sala__q footer { font: 400 .74rem/1.4 var(--mono); margin-top: .6rem; color: var(--mut); }
+  .cD .pending { font: 400 .8rem/1.5 var(--mono); padding: .9rem 1rem; border: 2px dashed var(--parte-rocoto-txt); color: var(--parte-rocoto-txt); background: repeating-linear-gradient(-45deg, transparent 0 10px, rgb(226 80 31 / .06) 10px 20px); }
+  .cD .sala__rev p { font: 500 .72rem/1 var(--mono); text-transform: uppercase; margin-bottom: .4rem; color: var(--mut); }
+  .cD .sala__rev ul { display: flex; flex-wrap: wrap; gap: 0 1.4rem; }
+  .cD .sala__rev a { display: inline-flex; align-items: center; gap: .35rem; min-height: 44px; font-weight: 600; text-underline-offset: 4px; }
+  .cD .sala__mini { aspect-ratio: 9 / 16; overflow: hidden; width: 52%; justify-self: end; }
+  @media (min-width: 900px) {
+    .cD .sala__fig { grid-column: 1 / 7; grid-row: 1 / 3; }
+    .cD .sala__txt { grid-column: 8 / 13; grid-row: 1; }
+    .cD .sala__mini { grid-column: 5 / 8; grid-row: 2; width: 100%; margin: 0 0 -3rem; align-self: end; position: relative; z-index: 1; }
+  }
+
+  /* 08 · Destination labels */
+  .cD .dest { background: var(--parte-papel-2); padding: var(--section) 0; border-top: 2px solid var(--fg); }
+  .cD .label { background: var(--parte-papel); border: 2px solid var(--fg); display: flex; flex-direction: column; }
+  .cD .label__top { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem 1rem; background: var(--parte-mandil); color: var(--parte-papel); font: 500 .72rem/1.2 var(--mono); text-transform: uppercase; }
+  .cD .label__name { font: 900 clamp(2.6rem, 5.6vw, 4.6rem)/.86 var(--disp); text-transform: uppercase; padding: 1rem 1rem .8rem; border-bottom: 2px solid var(--fg); }
+  .cD .label__rows div { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1rem; padding: .6rem 1rem; border-bottom: 1px dashed var(--line); }
+  .cD .label__rows dt { font: 500 .7rem/1.6 var(--mono); text-transform: uppercase; color: var(--mut); }
+  .cD .label__rows dd { margin: 0; }
+  .cD .label__btns { display: flex; flex-wrap: wrap; gap: .5rem; padding: 1rem; }
+  .cD .label__map { aspect-ratio: 16 / 9; margin-top: auto; border-top: 2px solid var(--fg); }
+  .cD .label__map button, .cD .label__map iframe { width: 100%; height: 100%; border: 0; }
+  .cD .label__map button { display: grid; place-content: center; justify-items: center; gap: .3rem; background: repeating-linear-gradient(0deg, transparent 0 23px, rgb(17 20 23 / .08) 23px 24px), repeating-linear-gradient(90deg, transparent 0 23px, rgb(17 20 23 / .08) 23px 24px), var(--parte-papel); }
+  .cD .label__map button:hover { background-color: var(--parte-choclo); }
+  .cD .label__map span { font: 800 1.6rem/1 var(--disp); text-transform: uppercase; }
+  .cD .label__map small { font: 400 .7rem/1.3 var(--mono); color: var(--mut); }
+  @media (min-width: 900px) { .cD .label { grid-column: span 6; } .cD .label:nth-child(2) { transform: translateY(3rem); } .cD .dest { padding-bottom: calc(var(--section) + 3rem); } }
+
+  /* 09 · Reservas */
+  .cD .reserva { background: var(--parte-rocoto); color: var(--parte-mandil); padding: var(--section) 0; border-top: 2px solid var(--fg); }
+  .cD .reserva__title { font: 900 clamp(5rem, 22vw, 20rem)/.76 var(--disp); text-transform: uppercase; letter-spacing: -.01em; }
+  .cD .reserva__lead { font-size: 1.2rem; max-width: 26rem; font-weight: 500; }
+  .cD .reserva__go { display: grid; border-top: 2px solid var(--fg); }
+  .cD .reserva__go a { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .2rem 1rem; padding: 1.1rem 0; border-bottom: 2px solid var(--fg); text-decoration: none; transition: padding var(--dur) var(--ease), background var(--dur); }
+  .cD .reserva__go a:hover { padding-inline: .8rem; background: var(--parte-mandil); color: var(--parte-rocoto); }
+  .cD .reserva__go span { font: 500 .74rem/1 var(--mono); text-transform: uppercase; grid-column: 1; }
+  .cD .reserva__go b { font: 900 clamp(2.4rem, 6vw, 5rem)/.9 var(--disp); text-transform: uppercase; grid-column: 1; }
+  .cD .reserva__go svg { grid-column: 2; grid-row: 1 / 3; }
+  .cD .reserva__tel { font: 500 .8rem/1 var(--mono); text-transform: uppercase; }
+  .cD .reserva__tel a { display: inline-block; padding: .8rem 0; }
+  @media (min-width: 900px) {
+    .cD .reserva .k { grid-column: 1 / -1; }
+    .cD .reserva__title { grid-column: 1 / 13; }
+    .cD .reserva__lead { grid-column: 1 / 5; align-self: start; margin-top: 1rem; }
+    .cD .reserva__go { grid-column: 6 / 13; margin-top: 1rem; }
+    .cD .reserva__tel { grid-column: 6 / 13; }
+  }
+
+  /* Footer */
+  .cD .ft { background: var(--parte-mandil); color: var(--parte-papel); padding: clamp(3rem, 6vw, 5rem) 0 7rem; }
+  .cD .ft__word { grid-column: 1 / -1; font: 900 clamp(3.6rem, 15.4vw, 14.6rem)/.8 var(--disp); text-transform: uppercase; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; color: var(--parte-papel); }
+  .cD .ft__cols { grid-column: 1 / -1; display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); padding-top: 2rem; border-top: 2px solid var(--parte-papel); }
+  .cD .ft h3 { font: 500 .72rem/1 var(--mono); text-transform: uppercase; color: var(--parte-choclo); margin-bottom: .8rem; }
+  .cD .ft address { font-style: normal; color: rgb(247 246 242 / .8); }
+  .cD .ft ul a { display: inline-block; padding: .3rem 0; text-decoration: none; color: rgb(247 246 242 / .8); }
+  .cD .ft ul a:hover { color: var(--parte-choclo); text-decoration: underline; }
+  .cD .ft__legal { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; font: 400 .72rem/1.4 var(--mono); text-transform: uppercase; color: rgb(247 246 242 / .7); padding-top: 2rem; }
+
+  /* Sticky mobile booking bar */
+  .cD .mbar { position: fixed; inset: auto 0 0; z-index: 44; display: flex; gap: .5rem; padding: .55rem var(--gut) calc(.55rem + env(safe-area-inset-bottom)); background: var(--parte-mandil); }
+  .cD .mbar .btn--choclo { flex: 1; }
+  @media (min-width: 1100px) { .cD .mbar { display: none; } }
+</style>

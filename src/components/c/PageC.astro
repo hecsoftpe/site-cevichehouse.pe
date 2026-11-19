@@ -14,7 +14,7 @@ import Icon from '../shared/Icon.astro';
 import Photo from '../shared/Photo.astro';
 import { type Lang, LOCATIONS, SOCIAL, MENU_PDF, PHONE_DISPLAY, PHONE_E164, whatsappLink, mapsDirections, mapsEmbed } from '../../data/site';
 import { MENU, priceOf, signatureItems } from '../../data/menu';
-import { P } from '../../data/gallery';
+import { P, IG } from '../../data/gallery';
 import { REVIEWS } from '../../data/reviews';
 import { t, url } from '../../i18n';
 
@@ -33,7 +33,7 @@ const nav = [
 const name = (o: { es: string; en: string }) => o[lang];
 const nn = (i: number) => String(i).padStart(2, '0');
 ---
-<Base lang={lang} path={path} bodyClass="cC" indexable={indexable} canonicalPath={canonicalPath} themeColor="#f0e9dd">
+<Base lang={lang} path={path} bodyClass="cC" indexable={indexable} canonicalPath={canonicalPath} themeColor="#f9f9f7">
   <a class="skip" href="#main">{s.skip}</a>
 
   <header class="hd" data-header>
@@ -74,7 +74,7 @@ const nn = (i: number) => String(i).padStart(2, '0');
           </div>
         </div>
         <figure class="hero__fig">
-          <div class="hero__img"><Photo src={P.ceviche.src} alt={P.ceviche[lang]} eager sizes="(min-width: 900px) 62vw, 100vw" position={P.ceviche.focus} /></div>
+          <div class="hero__img"><Photo src={IG.huarique.src} alt={IG.huarique[lang]} eager sizes="(min-width: 900px) 62vw, 100vw" position={IG.huarique.focus} /></div>
         </figure>
       </div>
       <dl class="g facts">
@@ -112,8 +112,8 @@ const nn = (i: number) => String(i).padStart(2, '0');
           <p>{s.dishesLead}</p>
         </div>
         <figure class="dishes__fig">
-          <div class="dishes__img"><Photo src={P.mariscos.src} alt={P.mariscos[lang]} sizes="(min-width: 900px) 30vw, 100vw" position={P.mariscos.focus} /></div>
-          <figcaption>{P.mariscos[lang]}</figcaption>
+          <div class="dishes__img"><Photo src={IG.ceviche.src} alt={IG.ceviche[lang]} sizes="(min-width: 900px) 30vw, 100vw" position={IG.ceviche.focus} /></div>
+          <figcaption>{IG.ceviche[lang]}</figcaption>
         </figure>
         <ol class="rows">
           {dishes.map((d, i) => (
@@ -168,16 +168,16 @@ const nn = (i: number) => String(i).padStart(2, '0');
         <p class="lab" data-reveal><i>04</i>{s.galleryKicker}</p>
         <h2 class="h2 gal__title" data-reveal>{s.galleryTitle}</h2>
         <figure class="gal__f gal__f--a" data-reveal>
-          <a href={P.ceviche.src.src} data-lightbox data-alt={P.ceviche[lang]}><Photo src={P.ceviche.src} alt={P.ceviche[lang]} sizes="(min-width: 900px) 46vw, 100vw" position={P.ceviche.focus} /></a>
-          <figcaption><i>4.1</i>{P.ceviche[lang]}</figcaption>
+          <a href={IG.casona.src.src} data-lightbox data-alt={IG.casona[lang]}><Photo src={IG.casona.src} alt={IG.casona[lang]} sizes="(min-width: 900px) 46vw, 100vw" position={IG.casona.focus} /></a>
+          <figcaption><i>4.1</i>{IG.casona[lang]}</figcaption>
         </figure>
         <figure class="gal__f gal__f--b" data-reveal>
           <a href={P.mariscos.src.src} data-lightbox data-alt={P.mariscos[lang]}><Photo src={P.mariscos.src} alt={P.mariscos[lang]} sizes="(min-width: 900px) 46vw, 100vw" position="50% 42%" /></a>
           <figcaption><i>4.2</i>{P.mariscos[lang]}</figcaption>
         </figure>
         <figure class="gal__f gal__f--c" data-reveal>
-          <a href={P.cevicheDetalle.src.src} data-lightbox data-alt={P.cevicheDetalle[lang]}><Photo src={P.cevicheDetalle.src} alt={P.cevicheDetalle[lang]} sizes="(min-width: 900px) 22vw, 50vw" /></a>
-          <figcaption><i>4.3</i>{P.cevicheDetalle[lang]}</figcaption>
+          <a href={IG.mozos.src.src} data-lightbox data-alt={IG.mozos[lang]}><Photo src={IG.mozos.src} alt={IG.mozos[lang]} sizes="(min-width: 900px) 22vw, 50vw" position={IG.mozos.focus} /></a>
+          <figcaption><i>4.3</i>{IG.mozos[lang]}</figcaption>
         </figure>
         <div class="gal__ig" data-reveal>
           <p>{s.galleryLead}</p>
@@ -272,13 +272,13 @@ const nn = (i: number) => String(i).padStart(2, '0');
 
 <style is:global>
   .cC {
-    --bg: var(--ivory-100); --stone: var(--stone-200); --fg: var(--ink-900); --muted: #5a554c; --line: rgb(15 30 38 / .18);
-    --accent: var(--olive-700);
+    --bg: var(--huarique-blanco); --stone: var(--huarique-acero); --fg: var(--huarique-indigo); --muted: var(--huarique-mut); --line: rgb(23 22 42 / .18);
+    --accent: var(--huarique-cobalto);
     --serif: 'Instrument Serif', Georgia, serif; --sans: 'Instrument Sans Variable', system-ui, sans-serif;
     background: var(--bg); color: var(--fg); font: 400 1rem/1.62 var(--sans);
   }
-  .cC ::selection { background: var(--olive-200); }
-  .cC :focus-visible { outline-color: var(--olive-700); }
+  .cC ::selection { background: var(--huarique-celeste); }
+  .cC :focus-visible { outline-color: var(--huarique-cobalto); }
   .cC .g { max-width: var(--max); margin: auto; padding-inline: var(--gut); display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
   @media (min-width: 900px) { .cC .g { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.5rem; } }
   .cC .h2 { font: 400 clamp(2.3rem, 5vw, 4.4rem)/1 var(--serif); letter-spacing: -.012em; text-wrap: balance; }
@@ -290,11 +290,11 @@ const nn = (i: number) => String(i).padStart(2, '0');
 
   .cC .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 48px; padding: .75rem 1.25rem; border-radius: 0; font: 550 .94rem/1 var(--sans); text-decoration: none; border: 1px solid transparent; transition: background var(--dur), color var(--dur), border-color var(--dur); }
   .cC .btn--sm { min-height: 44px; padding: .55rem 1rem; font-size: .88rem; }
-  .cC .btn--ink { background: var(--ink-900); color: var(--ivory-50); }
-  .cC .btn--ink:hover { background: var(--olive-700); }
+  .cC .btn--ink { background: var(--huarique-cobalto); color: var(--huarique-blanco); }
+  .cC .btn--ink:hover { background: var(--huarique-cobalto-2); }
   .cC .btn--line { border-color: var(--fg); color: var(--fg); background: transparent; }
-  .cC .btn--line:hover { background: var(--fg); color: var(--ivory-50); }
-  .cC .btn--ivory { background: var(--ivory-100); color: var(--ink-900); }
+  .cC .btn--line:hover { background: var(--fg); color: var(--huarique-blanco); }
+  .cC .btn--ivory { background: var(--huarique-blanco); color: var(--huarique-cobalto-2); }
   .cC .btn--ivory:hover { background: #fff; }
 
   /* Header */
@@ -446,7 +446,7 @@ const nn = (i: number) => String(i).padStart(2, '0');
   .cC .loc__map { aspect-ratio: 16 / 10; background: var(--stone); }
   .cC .loc__map button, .cC .loc__map iframe { width: 100%; height: 100%; border: 0; }
   .cC .loc__map button { display: grid; place-content: center; justify-items: center; gap: .3rem; background: var(--stone); transition: background var(--dur); }
-  .cC .loc__map button:hover { background: var(--stone-300); }
+  .cC .loc__map button:hover { background: var(--huarique-acero-2); }
   .cC .loc__map span { font: 400 1.5rem/1 var(--serif); border-bottom: 1px solid; }
   .cC .loc__map small { font-size: .8rem; color: var(--muted); }
   @media (min-width: 900px) {
@@ -476,22 +476,22 @@ const nn = (i: number) => String(i).padStart(2, '0');
   }
 
   /* Footer */
-  .cC .ft { background: var(--ink-900); color: var(--ivory-100); padding: var(--section) 0 6rem; }
+  .cC .ft { background: var(--huarique-cobalto); color: var(--huarique-blanco); padding: var(--section) 0 6rem; }
   .cC .ft__title { font: italic 400 clamp(2.8rem, 7vw, 6rem)/1 var(--serif); letter-spacing: -.02em; }
-  .cC .ft__cta { display: grid; gap: 1rem; justify-items: start; color: rgb(240 233 221 / .72); }
-  .cC .ft__cols { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); padding-top: 2rem; margin-top: 1rem; border-top: 1px solid rgb(240 233 221 / .16); }
-  .cC .ft h3 { font: 500 .8rem/1 var(--sans); color: var(--olive-200); margin-bottom: .8rem; }
-  .cC .ft address { font-style: normal; color: rgb(240 233 221 / .78); }
-  .cC .ft ul a { display: inline-block; padding: .3rem 0; text-decoration: none; color: rgb(240 233 221 / .78); }
+  .cC .ft__cta { display: grid; gap: 1rem; justify-items: start; color: rgb(249 249 247 / .95); }
+  .cC .ft__cols { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); padding-top: 2rem; margin-top: 1rem; border-top: 1px solid rgb(249 249 247 / .16); }
+  .cC .ft h3 { font: 500 .8rem/1 var(--sans); color: var(--huarique-celeste); margin-bottom: .8rem; }
+  .cC .ft address { font-style: normal; color: rgb(249 249 247 / .94); }
+  .cC .ft ul a { display: inline-block; padding: .3rem 0; text-decoration: none; color: rgb(249 249 247 / .94); }
   .cC .ft ul a:hover { color: #fff; text-decoration: underline; }
-  .cC .ft__legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; font-size: .8rem; color: rgb(240 233 221 / .62); padding-top: 2rem; }
-  .cC .ft__legal span:first-child { font: 400 1.3rem/1 var(--serif); color: var(--ivory-100); }
+  .cC .ft__legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; font-size: .8rem; color: rgb(249 249 247 / .92); padding-top: 2rem; }
+  .cC .ft__legal span:first-child { font: 400 1.3rem/1 var(--serif); color: var(--huarique-blanco); }
   @media (min-width: 900px) {
     .cC .ft__title { grid-column: 1 / 8; }
     .cC .ft__cta { grid-column: 9 / 13; align-self: end; }
     .cC .ft__cols, .cC .ft__legal { grid-column: 1 / 13; }
   }
 
-  .cC .fab { position: fixed; right: 1rem; bottom: 1rem; z-index: 40; width: 54px; height: 54px; display: grid; place-content: center; background: var(--ink-900); color: var(--ivory-50); }
+  .cC .fab { position: fixed; right: 1rem; bottom: 1rem; z-index: 40; width: 54px; height: 54px; display: grid; place-content: center; background: var(--huarique-cobalto); color: var(--huarique-blanco); }
   @media (min-width: 1024px) { .cC .fab { display: none; } }
 </style>

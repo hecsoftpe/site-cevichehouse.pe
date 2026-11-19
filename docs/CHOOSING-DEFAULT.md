@@ -4,7 +4,7 @@
    ```ts
    export const DEFAULT_CONCEPT: ConceptId | null = null;
    ```
-   to `'a'`, `'b'` or `'c'`.
+   to `'a'`, `'b'`, `'c'` or `'d'`.
 2. Commit and push to `main`. GitHub Actions rebuilds and publishes the site.
 
 Result:
